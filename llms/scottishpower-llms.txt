@@ -1,0 +1,57 @@
+# ScottishPower
+
+> ScottishPower (Scottish Power Limited, Glasgow) is a "Big Six" British energy company, wholly owned by Iberdrola since 2007, spanning three regulated roles: energy retail, the SP Energy Networks distribution and transmission licensee, and ScottishPower Renewables. Its public API surface is entirely on the network side. SP Energy Networks publishes 150 open datasets through a live, anonymous Opendatasoft Explore API v2.1 with a real OpenAPI 3.0.3 contract. On the consumer side there is nothing: Britain has no consumer energy data right, and ScottishPower publishes no developer portal, no self-serve API programme and no documented way to obtain an individual customer's usage or billing data.
+
+Generated 2026-07-27 by the API Evangelist enrichment pipeline. Probed for a provider-published /llms.txt first — https://spenergynetworks.opendatasoft.com/llms.txt returned HTTP 404, and ScottishPower's own hosts return HTTP 403 to every anonymous request, so this file is generated from the catalog entry and the artifacts in the repo.
+
+## What you can actually call
+
+- [SP Energy Networks Open Data Explore API](https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console): Live, anonymous REST API over 150 network datasets — embedded capacity register, network flow, historic substation demand, LV monitoring, smart-meter penetration, generation heat maps, flexibility and connections data. OpenAPI 3.0.3, 16 GET operations, CORS open, 5,000 requests/day anonymous quota.
+- [SP Energy Networks Open Data Search API v1.0](https://help.opendatasoft.com/apis/ods-search-v1/): The legacy Opendatasoft Search API still served on the same host. Live but superseded — use Explore v2.1.
+- Base URL: `https://spenergynetworks.opendatasoft.com/api/explore/v2.1`
+- No key required. Optional API key via `Authorization: Apikey <KEY>` header or `apikey=` query parameter raises quotas.
+
+## What does not exist
+
+- No consumer/customer API. No developer portal. developer, developers, data and docs .scottishpower.co.uk do not resolve; api.scottishpower.co.uk resolves but returns 403.
+- No GraphQL (`/graphql` -> 404), no MCP server, no webhooks, no AsyncAPI, no streaming endpoint, no gRPC.
+- No first-party SDK, no CLI, no public GitHub org (`scottishpower`, `spenergynetworks`, `sp-energy-networks` all 404).
+- No status page, no published SLA, no bug bounty, no trust centre, no published certifications.
+- No OAuth2 on this domain (`/api/oauth2/token` -> 404) and no OIDC discovery.
+
+## Specs
+
+- [OpenAPI 3.0.3](openapi/scottishpower-spen-open-data-explore-api-openapi.json): harvested verbatim from https://spenergynetworks.opendatasoft.com/api/explore/v2.1/swagger.json (HTTP 200, 16 paths).
+- [Overlay](overlays/scottishpower-spen-open-data-explore-api-overlay.yaml): API Evangelist enhancements, including the live 403/404 responses the published contract omits.
+
+## Operating rules for an agent
+
+- Every operation is a GET. The API is read-only, so every call is safe and idempotent and can be retried freely.
+- Catalogue metadata is anonymous for all 150 datasets. Record access is not: in a 100-dataset probe on 2026-07-27, 87 returned HTTP 403 `ForbiddenAccess` on `/records` and only 13 returned 200. Treat 403 as a normal per-dataset outcome and fall back to dataset metadata or the exports surface.
+- Resolve a `dataset_id` with `getDatasets` before addressing it; unknown ids return 404 `NotFoundResource`.
+- `limit` is capped at 100 without a `group_by` (20000 with one) and `offset+limit` must stay under 10000. For a whole dataset use the `/exports` endpoints, which have no row cap and cost one request.
+- Watch `X-RateLimit-Remaining`; the anonymous bucket is 5,000/day and resets at UTC midnight.
+- Errors are not RFC 9457. Three envelopes: `{error_code, message}` for 4xx, `{error}` for a bad key, and a quota object for 429.
+- Query with ODSQL (`select`, `where`, `group_by`, `order_by`, `refine`, `exclude`) — the same parameters mean the same thing on every endpoint.
+
+## Artifacts
+
+- [Authentication](authentication/scottishpower-authentication.yml)
+- [Conventions](conventions/scottishpower-conventions.yml) — pagination, ODSQL, versioning, error envelope, CORS, deprecation header
+- [Error catalog](errors/scottishpower-problem-types.yml) — eight error classes, all verified live
+- [Rate limits](rate-limits/scottishpower-rate-limits.yml)
+- [Lifecycle](lifecycle/scottishpower-lifecycle.yml)
+- [Changelog](changelog/scottishpower-changelog.yml)
+- [Data model](data-model/scottishpower-data-model.yml)
+- [Conformance](conformance/scottishpower-conformance.yml)
+- [MCP candidate tools](mcp/scottishpower-mcp.yml) and [tool crosswalk](mcp/scottishpower-tool-crosswalk.yml)
+- [Agent skills](skills/_index.yml)
+- [Live examples](examples/_index.yml)
+- [Packages](packages/scottishpower-packages.yml) — none first-party
+- [Components](components/scottishpower-components.yml) — hosted embeds and ODS widgets
+- [Well-known](well-known/scottishpower-well-known.yml), [domain security](security/scottishpower-domain-security.yml), [vulnerability disclosure](security/scottishpower-vulnerability-disclosure.yml)
+
+## Licence and provenance
+
+- Data: [SP Energy Networks Open Data Licence](https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/), based on Creative Commons Attribution 4.0.
+- The API contract, its conventions and its deprecation policy belong to Opendatasoft, the platform vendor. ScottishPower's contribution is the data, the licence and the decision to publish it anonymously — driven by Ofgem's Data Best Practice Guidance, a licence condition under RIIO-ED2 (Special Licence Condition 9.5).

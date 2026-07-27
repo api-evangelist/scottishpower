@@ -1,0 +1,97 @@
+generated: '2026-07-27'
+method: derived
+status: candidate
+source: >-
+  Derived one-to-one from the 16 operations in
+  openapi/scottishpower-spen-open-data-explore-api-openapi.json. Searched first
+  for an official hosted/remote MCP server: none exists. There is no
+  mcp.scottishpower.co.uk / mcp.spenergynetworks.co.uk, no /mcp or /sse endpoint
+  on spenergynetworks.opendatasoft.com, no ScottishPower entry in the MCP
+  registry, and no @modelcontextprotocol server for this provider.
+description: >-
+  A candidate MCP tool surface for the SP Energy Networks Open Data Explore API.
+  ScottishPower operates no MCP server; this is the tool set an agent host would
+  get by wrapping the provider's own OpenAPI, and it is unusually clean to wrap
+  because the API is read-only (GET only), fully anonymous for the catalogue,
+  and CORS-open. Every tool below inherits its real input schema from the backing
+  operation's parameters in the OpenAPI — nothing here is invented.
+server:
+  name: scottishpower-spen-open-data
+  transport: http
+  url: null
+  status: not-operated-by-provider
+  base_url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
+  auth: >-
+    None required for the catalogue and for the subset of datasets that serve
+    records anonymously. Optional Opendatasoft API key (Authorization: Apikey
+    <KEY> header, or apikey query parameter) raises quotas and unlocks
+    account-visible datasets. See authentication/scottishpower-authentication.yml.
+third_party_options:
+  - name: "@pipeworx/mcp-opendatasoft"
+    url: https://www.npmjs.com/package/@pipeworx/mcp-opendatasoft
+    note: >-
+      Third-party generic MCP server for Opendatasoft portals; can be pointed at
+      spenergynetworks.opendatasoft.com. Not published by ScottishPower or
+      Opendatasoft, not verified here beyond its registry listing.
+tools:
+  - name: list_datasets
+    description: Query the 150-dataset SP Energy Networks open data catalogue with an ODSQL where/select/order_by query.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getDatasets
+  - name: list_catalog_export_formats
+    description: List the export formats available for the whole catalogue.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#listExportFormats
+  - name: export_catalog
+    description: Export the dataset catalogue in a chosen format.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportDatasets
+  - name: export_catalog_csv
+    description: Export the dataset catalogue as CSV.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportCatalogCSV
+  - name: export_catalog_dcat
+    description: Export the catalogue as DCAT-AP RDF/XML for harvesting into another data portal.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportCatalogDCAT
+  - name: list_catalog_facets
+    description: List catalogue facet values (publisher, theme, keyword, licence) to narrow a dataset search.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getDatasetsFacets
+  - name: get_dataset
+    description: Show one dataset's metadata, field schema, licence and record count.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getDataset
+  - name: query_records
+    description: Query records from one dataset with ODSQL select/where/group_by/order_by, limit and offset.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getRecords
+  - name: get_record
+    description: Read a single record from a dataset by record id.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getRecord
+  - name: list_record_facets
+    description: List facet values within one dataset.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getRecordsFacets
+  - name: list_dataset_export_formats
+    description: List the export formats available for one dataset.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#listDatasetExportFormats
+  - name: export_dataset
+    description: Export a whole dataset in a chosen format, bypassing the records-endpoint result cap.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportRecords
+  - name: export_dataset_csv
+    description: Export a whole dataset as CSV.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportRecordsCSV
+  - name: export_dataset_parquet
+    description: Export a whole dataset as Parquet.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportRecordsParquet
+  - name: export_dataset_gpx
+    description: Export a geographic dataset as GPX.
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportRecordsGPX
+  - name: list_dataset_attachments
+    description: List files attached to a dataset (methodology notes, supporting documents).
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getDatasetAttachments
+agent_notes:
+  - >-
+    Read-only: the API supports HTTP GET only, so every tool is safe and
+    idempotent by construction. See conventions/scottishpower-conventions.yml.
+  - >-
+    Anonymous quota is 5,000 requests/day per client, signalled on every response
+    via X-RateLimit-Limit / X-RateLimit-Remaining / X-RateLimit-Reset. See
+    rate-limits/scottishpower-rate-limits.yml.
+  - >-
+    Catalogue metadata is anonymous for all 150 datasets, but most datasets
+    return 403 ForbiddenAccess on their records endpoint without credentials —
+    in a 100-dataset probe on 2026-07-27 only 13 served records anonymously. An
+    agent must handle 403 as a normal, expected outcome per dataset.

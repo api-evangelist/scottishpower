@@ -1,0 +1,53 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  Live inspection of https://spenergynetworks.opendatasoft.com on 2026-07-27 —
+  the portal's embed surface returned HTTP 200 and the served markup contains
+  ods-widgets directives (<ods-dataset-context>, <ods-table>,
+  <ods-notification-handler>) — plus the Opendatasoft component packages found
+  on npm (see packages/scottishpower-packages.yml).
+description: >-
+  Client-side, embeddable UI for SP Energy Networks open data. These are the
+  Opendatasoft platform's component families, running on ScottishPower's portal
+  and pointed at ScottishPower's datasets — first-party to the vendor, not to
+  ScottishPower, which ships no UI components of its own. Recorded because a
+  third party can genuinely embed SPEN network data in their own page without
+  writing an API client.
+provider_first_party: false
+platform: Opendatasoft
+families:
+  - name: Hosted embeds
+    kind: iframe
+    pattern: https://spenergynetworks.opendatasoft.com/explore/embed/dataset/{dataset_id}/{view}/
+    views: [table, map, chart, analyze, information, export, api]
+    verified: '2026-07-27'
+    verified_example: https://spenergynetworks.opendatasoft.com/explore/embed/dataset/spen-weekly-substation-carbon-estimate/table/
+    note: >-
+      No credentials and no build step — the fastest way to put a SPEN dataset on
+      another site. Subject to the same per-dataset access rules as the API.
+  - name: ODS Widgets
+    kind: web-components (AngularJS directives)
+    observed_directives: [ods-dataset-context, ods-table, ods-notification-handler]
+    evidence: Present in the markup served by the portal's embed views.
+    loader: ods-widgets JS/CSS bundle served by the platform
+    note: The widget layer the portal itself is built from; usable against any ODS domain including this one.
+  - name: "@opendatasoft/visualizations"
+    kind: js-component-library
+    registry: npm
+    url: https://www.npmjs.com/package/@opendatasoft/visualizations
+    repository: https://github.com/opendatasoft/ods-dataviz-sdk
+    official_to: Opendatasoft
+    note: Charts and maps that render Explore API v2.1 responses directly.
+  - name: "@opendatasoft/visualizations-react"
+    kind: react-component-library
+    registry: npm
+    url: https://www.npmjs.com/package/@opendatasoft/visualizations-react
+    repository: https://github.com/opendatasoft/ods-dataviz-sdk
+    official_to: Opendatasoft
+data_binding:
+  api: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
+  cors: "access-control-allow-origin: * — components can call the API straight from the browser."
+  caveat: >-
+    A component bound to a dataset whose records are not anonymously readable will
+    surface the API's 403 ForbiddenAccess; see
+    errors/scottishpower-problem-types.yml.

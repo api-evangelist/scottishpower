@@ -1,0 +1,78 @@
+generated: '2026-07-27'
+method: searched
+source: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+docs: https://help.opendatasoft.com/apis/ods-explore-v2/#section/Authentication
+description: >-
+  The auth profile for ScottishPower's only public API. Derived from the OpenAPI
+  securityScheme, then upgraded from the Opendatasoft Explore API authentication
+  documentation and live probes on 2026-07-27. The headline is that
+  authentication is optional: the catalogue and a subset of dataset records are
+  readable with no key and no account at all.
+summary:
+  types:
+  - apiKey
+  api_key_in:
+  - query
+  - header
+  oauth2_flows: []
+  required: false
+  anonymous_access: true
+schemes:
+- name: apikey
+  type: apiKey
+  in: query
+  parameter: apikey
+  description: API key to make authenticated requests.
+  sources:
+  - openapi/scottishpower-spen-open-data-explore-api-openapi.json
+- name: Authorization header (documented, not declared in the spec)
+  type: apiKey
+  in: header
+  parameter: Authorization
+  format: 'Authorization: Apikey <API_KEY>'
+  description: >-
+    The form the Opendatasoft docs recommend over the query parameter, because
+    headers are not stored in browser history or server logs. Not present in the
+    harvested securitySchemes — a real gap between the published contract and the
+    documented behaviour.
+  sources:
+  - https://help.opendatasoft.com/apis/ods-explore-v2/#section/Authentication
+anonymous:
+  verified: '2026-07-27'
+  evidence: >-
+    GET /api/explore/v2.1/catalog/datasets returned HTTP 200 with total_count 150
+    and no credentials of any kind. A bogus key returns HTTP 401
+    {"error": "API key is not valid"} — so supplying a bad key is worse than
+    supplying none.
+  scope: >-
+    Catalogue metadata for all 150 datasets. Record-level access is not uniformly
+    anonymous — 87 of 100 datasets probed returned HTTP 403 ForbiddenAccess on
+    /records. See errors/scottishpower-problem-types.yml.
+keys:
+  self_serve: true
+  url: https://spenergynetworks.opendatasoft.com/account/api-keys/
+  signup: https://spenergynetworks.opendatasoft.com/signup/
+  login: https://spenergynetworks.opendatasoft.com/login/
+  benefit: Extended quotas and access to datasets granted to the account.
+oauth2:
+  available_on_this_domain: false
+  platform_capability: true
+  standards: [RFC 6749, RFC 6750]
+  probes:
+    - {url: 'https://spenergynetworks.opendatasoft.com/api/oauth2/authorize', http_status: 404, date: '2026-07-27'}
+    - {url: 'https://spenergynetworks.opendatasoft.com/api/oauth2/token', http_status: 404, date: '2026-07-27'}
+  note: >-
+    Opendatasoft documents an OAuth2 authorization-code flow with bearer tokens
+    for third-party applications registered on a domain, but no OAuth2 endpoint
+    responds on the SP Energy Networks domain. No scopes/ artifact is emitted,
+    because there is no OAuth surface to enumerate.
+oidc:
+  discovery: false
+  note: /.well-known/openid-configuration returns 404 on the API host.
+consumer_side:
+  note: >-
+    ScottishPower Energy Retail exposes no authenticated customer API. There is a
+    conventional web/app account login at www.scottishpower.co.uk, but that host
+    returns HTTP 403 to every anonymous client and documents no token endpoint,
+    no OAuth flow and no third-party data-access path. Britain has no consumer
+    energy data right that would require one.

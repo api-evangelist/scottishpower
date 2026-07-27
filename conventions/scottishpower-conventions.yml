@@ -1,0 +1,180 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://help.opendatasoft.com/apis/ods-explore-v2/ (the contract SP Energy
+  Networks serves), plus live response headers and error bodies observed against
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1 on 2026-07-27, plus
+  openapi/scottishpower-spen-open-data-explore-api-openapi.json.
+description: >-
+  How the SP Energy Networks Open Data Explore API behaves across every
+  operation — auth style, idempotency, pagination, query language, tracing,
+  versioning, error envelope and rate-limit signalling. These are the
+  cross-cutting runtime semantics the OpenAPI does not fully express. Note the
+  provenance throughout: the contract and its conventions are Opendatasoft's;
+  ScottishPower's contribution is the data, the licence and the decision to
+  publish anonymously.
+base_url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
+api_style: >-
+  Read-only REST over HTTPS. JSON responses (application/json; charset=utf-8),
+  plus CSV / XLSX / Parquet / GPX / GeoJSON / RDF-XML on the export endpoints.
+  Endpoints are hierarchical (catalog -> dataset -> records) and every response
+  carries a links[] block for navigation.
+
+authentication:
+  scheme: API key, optional
+  required: false
+  mechanisms:
+    - "Authorization: Apikey <API_KEY> header (recommended by the docs)"
+    - "apikey=<API_KEY> query parameter (the form declared in the OpenAPI securityScheme)"
+  anonymous_access: >-
+    The catalogue (150 datasets) and a subset of dataset record endpoints are
+    fully anonymous — verified 2026-07-27 with no key and no account.
+  keys_from: https://spenergynetworks.opendatasoft.com/account/api-keys/
+  oauth2: >-
+    The Opendatasoft platform documents an OAuth2 authorization-code flow
+    (RFC 6749 / RFC 6750 bearer tokens) for third-party applications, but it is
+    not enabled on this domain — /api/oauth2/authorize and /api/oauth2/token both
+    return HTTP 404 on spenergynetworks.opendatasoft.com.
+  detail: authentication/scottishpower-authentication.yml
+  docs: https://help.opendatasoft.com/apis/ods-explore-v2/#section/Authentication
+
+idempotency:
+  supported: true
+  model: read-only-api
+  mechanism: null
+  applies_to: All 16 operations.
+  evidence: >-
+    The contract states "Only the HTTP `GET` method is supported" (OpenAPI
+    info.description), and all 16 operations in the spec are GET. Every call is
+    therefore safe and idempotent by HTTP semantics — a retry can never
+    double-apply an effect, which is why this API is unusually cheap for an
+    agent to retry.
+  caveat: >-
+    There is no Idempotency-Key header and no write surface, because there are no
+    writes. If ScottishPower ever exposes a write API, this section must be
+    re-derived rather than inherited.
+
+pagination:
+  style: offset
+  request_params:
+    limit: >-
+      Number of items to return. Default 10. Without a group_by the maximum is
+      100 and offset+limit must be < 10000; with a group_by the maximum is 20000
+      and offset+limit must be < 20000. Verified: limit=99999 returns HTTP 400
+      InvalidRESTParameterError.
+    offset: Index of the first item to return, used with limit.
+  response_fields:
+    total_count: Total number of items matching the query.
+    results: The page of items.
+    links: Array of {rel, href} navigation links (self, source, next/previous where applicable).
+  deep_paging: >-
+    Hard-capped. For result sets beyond the offset+limit ceiling the docs direct
+    you to the /exports endpoints, which have no row limit.
+  docs: https://help.opendatasoft.com/apis/ods-explore-v2/
+
+query_language:
+  name: ODSQL (Opendatasoft Query Language)
+  clauses: [select, where, group_by, order_by, refine, exclude]
+  applies_to: Uniformly across catalog and dataset endpoints — the same parameters mean the same thing everywhere.
+  extras: [limit, offset, lang, timezone, include_links, include_app_metas]
+  docs: https://help.opendatasoft.com/apis/ods-explore-v2/#section/Opendatasoft-Query-Language-(ODSQL)
+  note: >-
+    ODSQL errors are returned as HTTP 400 with error_code ODSQLError or
+    ODSQLSyntaxError; see errors/scottishpower-problem-types.yml.
+
+field_selection:
+  supported: true
+  mechanism: >-
+    ODSQL select clause — wildcard, explicit field names, include()/exclude()
+    functions, or computed expressions with an "as" label.
+
+request_tracing:
+  request_id_header: null
+  note: >-
+    No request-id or correlation header is emitted. Observed response headers on
+    2026-07-27 were server, date, content-type, content-length, the three
+    X-RateLimit-* headers, cache-control, vary, content-language, the CORS block,
+    strict-transport-security, x-content-type-options, referrer-policy,
+    content-security-policy and permissions-policy. Nothing to correlate a
+    support ticket against.
+
+versioning:
+  scheme: uri-path
+  current: v2.1
+  path: /api/explore/v2.1
+  also_live: >-
+    The legacy Search API v1.0 at /api/datasets/1.0 is still served on the same
+    host (HTTP 200, nhits 150) and is superseded by v2.1.
+  guarantees:
+    - ODSQL is backward compatible; new syntax never replaces existing syntax.
+    - Response bodies are stable — keys can be added but never renamed or deleted.
+    - URLs and endpoints are stable.
+  breaking_changes: Shipped only in a new API version with its own stable URL.
+  detail: lifecycle/scottishpower-lifecycle.yml
+
+deprecation_signalling:
+  header: ODS-Explore-API-Deprecation
+  format: "<FEATURE_ID>: deprecation message (multiple messages separated by ;)"
+  link_header: Link — carries the URL of the version changelog.
+  exposed_to_browsers: true
+  evidence: >-
+    Observed live in access-control-expose-headers on every response:
+    ODS-Explore-API-Deprecation, Link, X-RateLimit-Remaining, X-RateLimit-Limit,
+    X-RateLimit-Reset, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Limit,
+    X-RateLimit-dataset-Reset.
+  rfc8594_sunset: false
+
+error_envelope:
+  format: custom-json
+  rfc9457: false
+  shapes:
+    - '{ "error_code": string, "message": string }  — 4xx client errors'
+    - '{ "error": string }  — 401 invalid API key'
+    - '{ "errorcode": number, "error": string, "call_limit": number, "limit_time_unit": string, "reset_time": string }  — 429 quota'
+  media_type: application/json
+  detail: errors/scottishpower-problem-types.yml
+
+rate_limit_signalling:
+  headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset, X-RateLimit-dataset-Limit, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Reset]
+  throttled_status: 429
+  reset_format: "Absolute timestamp, e.g. 2026-07-28 00:00:00+00:00 — the quota is a daily bucket, not a rolling window."
+  detail: rate-limits/scottishpower-rate-limits.yml
+
+cors:
+  allow_origin: "*"
+  allow_methods: [POST, GET, OPTIONS]
+  max_age: 1000
+  expose_headers: [ODS-Explore-API-Deprecation, Link, X-RateLimit-Remaining, X-RateLimit-Limit, X-RateLimit-Reset, X-RateLimit-dataset-Remaining, X-RateLimit-dataset-Limit, X-RateLimit-dataset-Reset]
+  note: Browser-callable from any origin — a genuine open-data posture, not a proxy-only API.
+
+caching:
+  cache_control: "no-cache, no-store, max-age=0, must-revalidate"
+  vary: [Accept-Language, Cookie, Host]
+  etag: false
+
+authorization_surprise:
+  finding: >-
+    Catalogue metadata for all 150 datasets is anonymous, but most datasets
+    refuse their records endpoint anonymously. In a 100-dataset probe on
+    2026-07-27, 13 returned HTTP 200 on /records and 87 returned HTTP 403
+    error_code ForbiddenAccess. Every dataset reports visibility "domain".
+  consequence: >-
+    Any client — human or agent — must treat 403 on /records as a normal
+    per-dataset outcome and fall back to the dataset metadata, the exports
+    surface, or an authenticated key. Discoverability is genuinely open;
+    record-level access is not uniformly open.
+
+change_feeds:
+  per_dataset_rss: /explore/dataset/{dataset_id}/rss/
+  per_dataset_atom: /explore/dataset/{dataset_id}/atom/
+  note: >-
+    Poll-based change feeds exist per dataset (both are listed in the portal's
+    robots.txt Disallow block). There are no webhooks and no streaming surface —
+    see the AsyncAPI note in lifecycle/scottishpower-lifecycle.yml.
+
+cross_references:
+  authentication: authentication/scottishpower-authentication.yml
+  errors: errors/scottishpower-problem-types.yml
+  lifecycle: lifecycle/scottishpower-lifecycle.yml
+  rate_limits: rate-limits/scottishpower-rate-limits.yml
+  data_model: data-model/scottishpower-data-model.yml

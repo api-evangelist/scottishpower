@@ -1,0 +1,69 @@
+specification: API Commons Rate Limits
+specificationVersion: '0.1'
+provider: ScottishPower
+providerId: scottishpower
+generated: '2026-07-27'
+method: searched
+created: '2026-07-27'
+modified: '2026-07-27'
+tags:
+  - Rate Limiting
+  - Open Data
+  - Energy
+description: >-
+  Anonymous quota observed live on the SP Energy Networks Open Data Explore API.
+  Verified 2026-07-27 with no API key and no account: every response carried
+  X-RateLimit-Limit 5000 and an X-RateLimit-Reset of the next UTC midnight, with
+  X-RateLimit-Remaining decrementing per call. The platform additionally exposes
+  a per-dataset quota triple (X-RateLimit-dataset-*) in its CORS
+  expose-headers list. Values are what the server returned; no tiered published
+  rate card exists for this API.
+sources:
+  - https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets
+  - https://help.opendatasoft.com/apis/ods-explore-v2/
+headers:
+  limit: X-RateLimit-Limit
+  remaining: X-RateLimit-Remaining
+  reset: X-RateLimit-Reset
+  datasetLimit: X-RateLimit-dataset-Limit
+  datasetRemaining: X-RateLimit-dataset-Remaining
+  datasetReset: X-RateLimit-dataset-Reset
+responseCodes:
+  throttled: 429
+limits:
+  - name: Anonymous requests (domain-wide)
+    scope: client
+    metric: requests_per_day
+    limit: 5000
+    timeFrame: day
+    reset: Daily at 00:00:00+00:00 (absolute timestamp returned in X-RateLimit-Reset)
+    verified: '2026-07-27'
+    evidence: "x-ratelimit-limit: 5000, x-ratelimit-remaining: 4982, x-ratelimit-reset: 2026-07-28 00:00:00+00:00"
+  - name: Per-dataset requests
+    scope: dataset
+    metric: requests_per_day
+    limit: null
+    timeFrame: day
+    note: >-
+      The X-RateLimit-dataset-Limit / -Remaining / -Reset headers are declared in
+      access-control-expose-headers but were not populated on the anonymous
+      catalogue calls observed; the ceiling is not published.
+authenticated:
+  note: >-
+    The Opendatasoft docs state that an authenticated user "can be granted
+    access to restricted datasets and benefit from extended quotas for API
+    calls". The raised ceiling is not published as a number and depends on the
+    portal's own configuration. API keys are self-serve from
+    https://spenergynetworks.opendatasoft.com/account/api-keys/.
+throttled_response:
+  status: 429
+  body: >-
+    {"errorcode": <number>, "error": "Too many requests on the domain. Please
+    contact the domain administrator.", "call_limit": <number>,
+    "limit_time_unit": "day", "reset_time": "<ISO 8601>"}
+  source: components.responses.quota in the harvested OpenAPI
+export_endpoints:
+  note: >-
+    The /exports endpoints have no row cap (unlike /records, which is capped at
+    limit 100 without group_by), so a single export call is the efficient way to
+    take a whole dataset without burning the daily request quota.

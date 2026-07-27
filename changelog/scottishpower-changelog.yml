@@ -1,0 +1,51 @@
+generated: '2026-07-27'
+method: searched
+source: https://help.opendatasoft.com/apis/ods-explore-v2/#section/Changelog
+description: >-
+  The change record that applies to the API ScottishPower's SP Energy Networks
+  arm serves. It is a version-scoped changelog, not a dated feed: the Explore API
+  documents what changed when the contract moved from v2.0 to v2.1, and commits
+  that nothing breaking will change within a version. Neither ScottishPower nor
+  SP Energy Networks publishes a dated API changelog of its own, and the portal
+  itself has no releases feed — so this is the honest ceiling of what can be
+  captured, recorded with that provenance.
+docs: https://help.opendatasoft.com/apis/ods-explore-v2/
+versioning:
+  scheme: uri-path major.minor
+  current: v2.1
+  mechanism: Version is part of the base path (/api/explore/v2.1); no version header.
+  detail: lifecycle/scottishpower-lifecycle.yml
+provider_published: false
+platform: Opendatasoft
+dated_entries_available: false
+entries:
+  - version: 'v2.1'
+    latest: true
+    date: null
+    breaking:
+      - '/api/explore/v2.0/.../datasets/{dataset_id}/aggregates and /query removed — merged into the single /records endpoint.'
+      - 'Output schemas changed for /datasets, /datasets/{dataset_id} and related catalog endpoints.'
+      - 'Date functions year(), month(), day(), hour(), minute(), second() now return integers instead of strings.'
+      - 'Date aggregation keys are formatted as ISO-format dates; previously timestamps.'
+      - 'Datetimes in GeoJSON exports are output as ISO-format strings; previously integer timestamps.'
+      - 'The search() full-text function was reworked.'
+      - 'XLSX export format replaces the old XLS format.'
+      - 'CSV exports output a Byte Order Mark by default.'
+      - 'GPX exports use <extension> instead of <desc> by default to export attributes.'
+      - 'In a group_by, null values are now grouped.'
+    additions:
+      - 'group_by clause is now available on the export endpoints.'
+      - 'New full-text functions suggest() and startswith().'
+    deprecations:
+      - 'Grouping by geo fields is deprecated in favour of geo_cluster().'
+      - 'distance() renamed within_distance(); geometry(...INTERSECTS/DISJOINT/WITHIN) renamed intersects()/disjoint()/within(). Old names still available.'
+  - version: 'v2.0'
+    date: null
+    status: retired
+    note: Superseded by v2.1; its aggregates and query endpoints no longer exist.
+cadence:
+  note: >-
+    The docs state new features are added monthly and bugs fixed weekly within a
+    version, under the backward-compatibility guarantees recorded in
+    lifecycle/scottishpower-lifecycle.yml. In-version changes are announced by
+    the ODS-Explore-API-Deprecation response header rather than by a dated feed.

@@ -1,0 +1,203 @@
+{
+  "total_count": 150,
+  "results": [
+    {
+      "visibility": "domain",
+      "fields": [
+        {
+          "name": "name",
+          "description": "Title of the data table.",
+          "annotations": {},
+          "label": "Name",
+          "type": "text"
+        },
+        {
+          "name": "field",
+          "description": "Name of column that data check has been applied to.",
+          "annotations": {},
+          "label": "Field",
+          "type": "text"
+        },
+        {
+          "name": "description",
+          "description": "Details of data check applied.",
+          "annotations": {},
+          "label": "Description",
+          "type": "text"
+        },
+        {
+          "name": "score",
+          "description": "Percentage of rows that adhere to data quality check.",
+          "annotations": {},
+          "label": "Score",
+          "type": "double"
+        },
+        {
+          "name": "failed_rows",
+          "description": "Number of rows that did not adhere to the data quality check.",
+          "annotations": {},
+          "label": "Failed Rows",
+          "type": "double"
+        },
+        {
+          "name": "total_rows",
+          "description": "Number of rows the data quality check was applied to.",
+          "annotations": {},
+          "label": "Total Rows",
+          "type": "double"
+        },
+        {
+          "name": "dimension",
+          "description": "VALIDITY measures whether the values in a dataset are within the correct range or format. This dimension ensures that the data adheres to predefined criteria set by the data owner, such as acceptable value ranges, formats, and types.\n\nCOMPLETENESS checks whether the cells in a dataset are filled or empty. The score is based on a simple 'Yes/No' - if the cell is filled, it counts as complete. This check does not consider if the value in the cell is correct/valid.\n\nUNIQUENESS measures how many values in a dataset are unique. Any duplicate values will lower this score. This measure is important for data that must be unique to be correct, such as Customer ID or Project Reference ID.",
+          "annotations": {},
+          "label": "Dimension",
+          "type": "text"
+        }
+      ],
+      "dataset_id": "spen_data_quality_transmission_generation_heat_map",
+      "dataset_uid": "da_us3vrm",
+      "has_records": true,
+      "features": [
+        "analyze",
+        "custom_view"
+      ],
+      "attachments": [],
+      "alternative_exports": [
+        {
+          "id": "transmission_generation_heat_map_spen_017_data_quality_checks_march_25_xlsx",
+          "title": "Transmission Generation Heat Map (SPEN_017) Data Quality Checks (March 25).xlsx",
+          "description": null,
+          "mimetype": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "url": "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen_data_quality_transmission_generation_heat_map/alternative_exports/transmission_generation_heat_map_spen_017_data_quality_checks_march_25_xlsx"
+        }
+      ],
+      "data_visible": false,
+      "metas": {
+        "default": {
+          "title": "Transmission Generation Heat Map (SPEN_017) Data Quality Checks",
+          "description": "<p>This data table provides the detailed data quality assessment scores for the Transmission Generation Heat Map.\u00a0 The quality assessment was carried out on the 31st of January 2026.\u00a0\u00a0</p><p>At SPEN, we are dedicated to sharing high-quality data with our stakeholders and being transparent about its' quality. This is why we openly share the results of our data quality assessments. We collaborate closely with Data Owners to address any identified issues and enhance our overall data quality.\u00a0 To demonstrate our progress we conduct, at a minimum, bi-annual assessments of our data quality - for datasets that are refreshed more frequently than this, please note that the quality assessment may be based on an earlier version of the dataset. To learn more about our approach to how we assess data quality, visit\u00a0<a href=\"http://www.spenergynetworks.co.uk/pages/data_quality.aspx\" rel=\"noreferrer noopener\" target=\"_blank\" title=\"http://www.spenergynetworks.co.uk/pages/data_quality.aspx\">Data Quality - SP Energy Networks</a></p><p>We welcome feedback and questions from our stakeholders regarding this process. Our Open Data Team is available to answer any enquiries or receive feedback on the assessments. You can contact them via our Open Data mailbox at\u00a0<a href=\"mailto:opendata@spenergynetworks.co.uk\" rel=\"noreferrer noopener\" target=\"_blank\" title=\"mailto:opendata@spenergynetworks.co.uk\">opendata@spenergynetworks.co.uk</a>.</p><p>The first phase of our comprehensive data quality assessment measures the quality of our datasets across three dimensions.\u00a0Please refer to the dataset schema for the definitions of these dimensions.\u00a0\u00a0 We are now in the process of expanding our quality assessments to include additional dimensions to provide a more comprehensive evaluation and will update the data tables with the results when available.</p><h3 class=\"\">Disclaimer</h3><p>The data quality assessment may not represent the quality of the current dataset that is published on the Open Data Portal. \u00a0Please check the date of the latest quality assessment and compare to the 'Modified' date of the corresponding dataset. \u00a0The data quality assessments will be updated on either a quarterly or annual basis, dependent on the update frequency of the dataset. \u00a0This information can be found in the dataset metadata, within the Information tab. \u00a0If you require a more up to date quality assessment, please contact the Open Data Team at <a href=\"mailto:opendata@spenergynetworks.co.uk\" rel=\"noreferrer noopener\" target=\"_blank\" title=\"mailto:opendata@spenergynetworks.co.uk\">opendata@spenergynetworks.co.uk</a> and a member of the team will be in contact.</p>",
+          "theme": [
+            "Supporting Information"
+          ],
+          "keyword": [
+            "Data Quality",
+            "Heat map"
+          ],
+          "license": "CC BY 4.0",
+          "license_url": "https://creativecommons.org/licenses/by/4.0/deed.en",
+          "language": "en",
+          "metadata_languages": [
+            "en"
+          ],
+          "timezone": null,
+          "modified": "2025-10-22T14:45:48+00:00",
+          "modified_updates_on_metadata_change": false,
+          "modified_updates_on_data_change": false,
+          "data_processed": "2026-02-19T11:46:36+00:00",
+          "metadata_processed": "2026-02-19T14:17:12.436000+00:00",
+          "geographic_reference": null,
+          "geographic_reference_auto": false,
+          "territory": null,
+          "geometry_types": null,
+          "bbox": null,
+          "publisher": "SP Energy Networks SC389555",
+          "references": null,
+          "records_count": 23,
+          "attributions": null,
+          "source_domain": null,
+          "source_domain_title": null,
+          "source_domain_address": null,
+          "source_dataset": null,
+          "shared_catalog": null,
+          "federated": false,
+          "parent_domain": null,
+          "update_frequency": "ANNUAL"
+        },
+        "custom": {
+          "geographic-coverage": "Central & Southern Scotland",
+          "creator": "SP Energy Networks SC389555",
+          "subject": "Data Quality, Heat Map",
+          "contributor": "SP Energy Networks SC389555",
+          "type": "Dataset",
+          "format": "CSV, JSON, XLSX",
+          "source": "SP Energy Networks SC389555",
+          "relation": "<p><a href=\"https://spenergynetworks.opendatasoft.com/explore/dataset/transmission-generation-heat-map0/information/\">Transmission Generation Heat Map Dataset</a></p>",
+          "rights": "<p><a href=\"https://creativecommons.org/licenses/by/4.0/deed.en\" style=\"background-color: rgb(255, 255, 255); font-family: Calibri, sans-serif; font-size: 14.6667px; font-weight: 400;\"><span style=\"font-size: 10.5pt; line-height: 14.98px; font-family: Arial, sans-serif; color: rgb(35, 82, 124); background-image: initial; background-position: initial; background-size: initial; background-repeat: initial; background-attachment: initial; background-origin: initial; background-clip: initial;\">Creative Commons Attribution 4.0 International</span></a></p>"
+        },
+        "dublin-core": {
+          "title": "Transmission Generation Heat Map (SPEN_017) Data Quality Checks",
+          "alternative": null,
+          "subject": [
+            "Heat map",
+            "Heat Map",
+            "Data Quality"
+          ],
+          "description": "<p>This data table provides the detailed data quality assessment scores for the Transmission Generation Heat Map.\u00a0 The quality assessment was carried out on the 31st of January 2026.\u00a0\u00a0</p><p>At SPEN, we are dedicated to sharing high-quality data with our stakeholders and being transparent about its' quality. This is why we openly share the results of our data quality assessments. We collaborate closely with Data Owners to address any identified issues and enhance our overall data quality.\u00a0 To demonstrate our progress we conduct, at a minimum, bi-annual assessments of our data quality - for datasets that are refreshed more frequently than this, please note that the quality assessment may be based on an earlier version of the dataset. To learn more about our approach to how we assess data quality, visit\u00a0<a href=\"http://www.spenergynetworks.co.uk/pages/data_quality.aspx\" rel=\"noreferrer noopener\" target=\"_blank\" title=\"http://www.spenergynetworks.co.uk/pages/data_quality.aspx\">Data Quality - SP Energy Networks</a></p><p>We welcome feedback and questions from our stakeholders regarding this process. Our Open Data Team is available to answer any enquiries or receive feedback on the assessments. You can contact them via our Open Data mailbox at\u00a0<a href=\"mailto:opendata@spenergynetworks.co.uk\" rel=\"noreferrer noopener\" target=\"_blank\" title=\"mailto:opendata@spenergynetworks.co.uk\">opendata@spenergynetworks.co.uk</a>.</p><p>The first phase of our comprehensive data quality assessment measures the quality of our datasets across three dimensions.\u00a0Please refer to the dataset schema for the definitions of these dimensions.\u00a0\u00a0 We are now in the process of expanding our quality assessments to include additional dimensions to provide a more comprehensive evaluation and will update the data tables with the results when available.</p><h3 class=\"\">Disclaimer</h3><p>The data quality assessment may not represent the quality of the current dataset that is published on the Open Data Portal. \u00a0Please check the date of the latest quality assessment and compare to the 'Modified' date of the corresponding dataset. \u00a0The data quality assessments will be updated on either a quarterly or annual basis, dependent on the update frequency of the dataset. \u00a0This information can be found in the dataset metadata, within the Information tab. \u00a0If you require a more up to date quality assessment, please contact the Open Data Team at <a href=\"mailto:opendata@spenergynetworks.co.uk\" rel=\"noreferrer noopener\" target=\"_blank\" title=\"mailto:opendata@spenergynetworks.co.uk\">opendata@spenergynetworks.co.uk</a> and a member of the team will be in contact.</p>",
+          "abstract": null,
+          "tableOfContent": null,
+          "type": "Dataset",
+          "language": "eng",
+          "coverage": [
+            "Central & Southern Scotland"
+          ],
+          "spatial": null,
+          "temporal_start": null,
+          "temporal_end": null,
+          "relation": "https://spenergynetworks.opendatasoft.com/explore/dataset/transmission-generation-heat-map0/information/",
+          "source": "SP Energy Networks SC389555",
+          "replaces": null,
+          "references": null,
+          "requires": null,
+          "conformsTo": null,
+          "hasFormat": null,
+          "hasPart": null,
+          "hasVersion": null,
+          "isFormatOf": null,
+          "isPartOf": null,
+          "isVersionOf": null,
+          "isReferencedBy": null,
+          "isReplacedBy": null,
+          "isRequiredBy": null,
+          "contributor": [
+            "SP Energy Networks SC389555"
+          ],
+          "creator": "SP Energy Networks SC389555",
+          "publisher": "SP Energy Networks SC389555",
+          "rights": "https://creativecommons.org/licenses/by/4.0/deed.en",
+          "accessRights": null,
+          "license": "CC BY 4.0",
+          "date_start": null,
+          "date_end": null,
+          "available_start": null,
+          "available_end": null,
+          "created": null,
+          "dateAccepted": null,
+          "dateCopyrighted": null,
+          "dateSubmitted": null,
+          "issued": null,
+          "modified": "2025-10-22T14:45:48+00:00",
+          "valid_start": null,
+          "valid_end": null,
+          "format": [
+            "text/csv",
+            "application/json",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+          ],
+          "extent": null,
+          "medium": null,
+          "identifier": "spen_data_quality_transmission_generation_heat_map",
+          "bibliographicCitation": null,
+          "rightsHolder": null,
+          "accrualMethod": null,
+          "accrualPeriodicity": "annual",
+          "accrualPolicy": null,
+          "audience": null,
+          "educationLevel": null,
+          "instructionalMethod": null,
+          "mediator": null,
+          "provenance": null
+        }
+      }
+    }
+  ]
+}

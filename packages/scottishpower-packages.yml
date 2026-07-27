@@ -1,0 +1,77 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  Registry searches run 2026-07-27 against npm (registry.npmjs.org search),
+  PyPI, and GitHub org lookups. Probed for a ScottishPower / SP Energy Networks
+  first-party client library and for libraries that target the Opendatasoft
+  Explore v2.1 contract this provider's API implements.
+description: >-
+  ScottishPower publishes no client libraries of its own. GitHub orgs
+  `scottishpower`, `spenergynetworks` and `sp-energy-networks` all return 404,
+  npm has no ScottishPower-published package, and PyPI has none. The libraries
+  below are real and do work against
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1, but every one of
+  them is maintained by the platform vendor (Opendatasoft) or by a third party —
+  none is first-party to ScottishPower, so none is marked official.
+first_party_sdks: 0
+packages:
+  - language: javascript
+    registry: npm
+    name: "@opendatasoft/api-client"
+    url: https://www.npmjs.com/package/@opendatasoft/api-client
+    install: npm install @opendatasoft/api-client
+    version_at_harvest: 21.10.1
+    repository: https://github.com/opendatasoft/ods-dataviz-sdk
+    official: false
+    maintained_by: Opendatasoft (platform vendor)
+    note: >-
+      Opendatasoft's own API client for the Explore API; targets any ODS domain,
+      including spenergynetworks.opendatasoft.com. First-party to Opendatasoft,
+      not to ScottishPower.
+  - language: javascript
+    registry: npm
+    name: "@opendatasoft/visualizations"
+    url: https://www.npmjs.com/package/@opendatasoft/visualizations
+    install: npm install @opendatasoft/visualizations
+    repository: https://github.com/opendatasoft/ods-dataviz-sdk
+    official: false
+    maintained_by: Opendatasoft (platform vendor)
+    note: Chart/map components that render Explore API responses. See components/scottishpower-components.yml.
+  - language: javascript
+    registry: npm
+    name: "@opendatasoft/visualizations-react"
+    url: https://www.npmjs.com/package/@opendatasoft/visualizations-react
+    install: npm install @opendatasoft/visualizations-react
+    repository: https://github.com/opendatasoft/ods-dataviz-sdk
+    official: false
+    maintained_by: Opendatasoft (platform vendor)
+  - language: python
+    registry: pypi
+    name: odsclient
+    url: https://pypi.org/project/odsclient/
+    install: pip install odsclient
+    version_at_harvest: 0.8.4
+    repository: https://github.com/smarie/python-odsclient
+    official: false
+    maintained_by: Sylvain Marie (third party, Schneider Electric)
+    note: >-
+      Self-described "nonofficial client for OpenDataSoft API". Ships a CLI
+      (`odsclient`) alongside the library.
+  - language: javascript
+    registry: npm
+    name: "@pipeworx/mcp-opendatasoft"
+    url: https://www.npmjs.com/package/@pipeworx/mcp-opendatasoft
+    install: npm install @pipeworx/mcp-opendatasoft
+    version_at_harvest: 0.1.0
+    repository: https://github.com/pipeworx-io/mcp-opendatasoft
+    official: false
+    maintained_by: pipeworx-io (third party)
+    kind: mcp-server
+    note: >-
+      Generic MCP server for Opendatasoft portals. Not published by
+      ScottishPower or Opendatasoft. See mcp/scottishpower-mcp.yml.
+registries_probed:
+  - {registry: npm, query: scottishpower, result: no first-party package}
+  - {registry: npm, query: opendatasoft, result: vendor + third-party packages listed above}
+  - {registry: pypi, queries: [opendatasoft, opendatasoft-api, ods-client, explore-api], result: only third-party odsclient}
+  - {registry: github, orgs: [scottishpower, spenergynetworks, sp-energy-networks], result: 404 — no public org}

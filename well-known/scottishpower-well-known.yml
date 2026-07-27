@@ -1,0 +1,70 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  Live probes of the /.well-known/ discovery surface on every host reachable
+  from apis.yml (baseURL, Website, PortalHome) and the OpenAPI servers[] entry,
+  run 2026-07-27. Status is the HTTP code observed at fetch time; only documents
+  that returned a real, correctly-typed payload were saved verbatim.
+description: >-
+  ScottishPower's own web estate is bot-blocked — www.scottishpower.co.uk and
+  www.spenergynetworks.co.uk return HTTP 403 to every anonymous client on every
+  path, including /.well-known/*, so nothing can be read there from outside.
+  The one host that answers is spenergynetworks.opendatasoft.com, the SP Energy
+  Networks Open Data Portal, which serves a real RFC 9116 security.txt. That
+  file is the Opendatasoft platform's security contact (security@opendatasoft.com),
+  not a ScottishPower-authored disclosure policy — it is the disclosure contact
+  for the host that actually serves the API, recorded here with that provenance
+  and nothing more claimed.
+hosts:
+  - host: https://spenergynetworks.opendatasoft.com
+    role: API host + open data portal (OpenAPI servers[0])
+    documents:
+      - path: /.well-known/security.txt
+        status: 200
+        content_type: text/plain
+        file: scottishpower-security.txt
+        note: >-
+          RFC 9116. Contact mailto:security@opendatasoft.com, Expires
+          2050-01-01T11:00:00.000Z, Preferred-Languages en,fr. Platform-level
+          (Opendatasoft), served on the SPEN portal host. No Policy: field.
+      - path: /.well-known/openid-configuration
+        status: 404
+      - path: /.well-known/oauth-authorization-server
+        status: 404
+      - path: /.well-known/api-catalog
+        status: 404
+      - path: /.well-known/ai-plugin.json
+        status: 404
+      - path: /llms.txt
+        status: 404
+      - path: /robots.txt
+        status: 200
+        note: >-
+          Disallows /api/ for all user agents but explicitly Allows /api/ for
+          Googlebot; also disallows /login, /publish, /backoffice and the
+          per-dataset /explore/dataset/*/rss/ and /atom/ change feeds.
+  - host: https://www.spenergynetworks.co.uk
+    role: SP Energy Networks corporate site
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+      - path: /.well-known/openid-configuration
+        status: 403
+      - path: /.well-known/oauth-authorization-server
+        status: 403
+      - path: /.well-known/api-catalog
+        status: 403
+      - path: /.well-known/ai-plugin.json
+        status: 403
+    note: Bot-blocked. Every anonymous request to this host returns 403, including /robots.txt.
+  - host: https://www.scottishpower.co.uk
+    role: ScottishPower Energy Retail corporate site
+    documents:
+      - path: /.well-known/security.txt
+        status: 403
+      - path: /.well-known/openid-configuration
+        status: 403
+    note: >-
+      Bot-blocked. Verified again 2026-07-27; same 403 on every path recorded in
+      review.yml probes. api.scottishpower.co.uk resolves in DNS but also 403s,
+      and developer/developers/data/docs.scottishpower.co.uk do not resolve.

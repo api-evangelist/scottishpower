@@ -1,0 +1,17 @@
+{
+  "total_count": 310125,
+  "results": [
+    {
+      "timestamp": "2026-07-22T16:30:00+00:00",
+      "licence_area": "SPM",
+      "substation": "Safeway",
+      "gco2e": 172665.7
+    },
+    {
+      "timestamp": "2026-07-22T18:30:00+00:00",
+      "licence_area": "SPM",
+      "substation": "Safeway",
+      "gco2e": 203516.0
+    }
+  ]
+}

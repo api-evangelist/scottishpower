@@ -1,0 +1,32 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  Real anonymous responses captured from
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1 on 2026-07-27. Each
+  file is the verbatim JSON body the live API returned — no keys, no account, no
+  editing beyond pretty-printing.
+description: >-
+  Live example payloads for the SP Energy Networks Open Data Explore API, one per
+  marquee operation, so a client or an agent can see the real response envelope
+  (total_count / results / links) before making a call.
+examples:
+  - file: scottishpower-list-datasets-example.json
+    operation: getDatasets
+    request: GET /catalog/datasets?limit=1
+    http_status: 200
+    note: One dataset entry with its full metas and field schema; total_count 150 at capture.
+  - file: scottishpower-query-records-example.json
+    operation: getRecords
+    request: GET /catalog/datasets/spen-weekly-substation-carbon-estimate/records?limit=2
+    http_status: 200
+    note: >-
+      Two rows of weekly substation carbon estimates (timestamp, licence_area,
+      substation, gco2e) out of total_count 310,125. One of the 13-in-100
+      datasets that serve records anonymously.
+  - file: scottishpower-catalog-facets-example.json
+    operation: getDatasetsFacets
+    request: GET /catalog/facets?facet=publisher&limit=5
+    http_status: 200
+    note: >-
+      Publisher facet — SP Energy Networks SC389555 (145 datasets) and SP
+      Distribution SC189125 (1).

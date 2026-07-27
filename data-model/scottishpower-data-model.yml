@@ -1,0 +1,108 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Derived from components.schemas and the path hierarchy in
+  openapi/scottishpower-spen-open-data-explore-api-openapi.json (dataset,
+  datasets, record, records, attachment, facet_enumeration,
+  facet_value_enumeration, links), plus live payloads captured from
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1 on 2026-07-27
+  (examples/).
+description: >-
+  The entity graph behind the SP Energy Networks Open Data Explore API. It is a
+  catalogue model, not a business-object model: a Domain holds a Catalog of
+  Datasets, each Dataset declares Fields and holds Records and Attachments, and
+  facets are the navigational index over both the catalogue and each dataset.
+  Identifiers are human-readable slugs (e.g. spen-weekly-substation-carbon-estimate),
+  not prefixed opaque ids.
+notation: >-
+  relationships use has_one / has_many / belongs_to with the linking field name;
+  direction is from the entity that owns the reference.
+entities:
+  - name: Domain
+    id_field: null
+    description: >-
+      The portal itself — spenergynetworks.opendatasoft.com. Scopes the catalogue,
+      the API keys and the daily rate-limit bucket.
+  - name: Catalog
+    id_field: null
+    path: /catalog/datasets
+    description: The set of published datasets on the domain. 150 at harvest, 145 published by SP Energy Networks SC389555 and 1 by SP Distribution SC189125.
+  - name: Dataset
+    id_field: dataset_id
+    alt_id: dataset_uid
+    path: /catalog/datasets/{dataset_id}
+    id_style: human-readable slug
+    example_id: spen-weekly-substation-carbon-estimate
+    description: >-
+      One published data table with metadata (metas), a field schema (fields),
+      visibility, has_records and data_visible flags, and navigation links.
+  - name: Field
+    id_field: name
+    description: >-
+      A column definition on a Dataset — name, label, type (text/double/date/geo_point/geo_shape),
+      description and annotations (facet, sortable). Read from Dataset.fields.
+  - name: Record
+    id_field: _id
+    path: /catalog/datasets/{dataset_id}/records/{record_id}
+    description: >-
+      One row of a dataset. Carries _id, _timestamp, _size and _links alongside
+      the dataset's own fields.
+  - name: Attachment
+    id_field: href
+    path: /catalog/datasets/{dataset_id}/attachments
+    description: A file attached to a Dataset (methodology notes, supporting documents), with its own metas.
+  - name: Facet
+    id_field: name
+    path: /catalog/facets and /catalog/datasets/{dataset_id}/facets
+    description: >-
+      A navigational dimension (publisher, theme, keyword, licence, or any
+      annotated dataset field) with enumerated values and counts.
+  - name: FacetValue
+    id_field: value
+    description: One value within a Facet, with count and state (displayed/refined/excluded).
+  - name: Export
+    id_field: format
+    path: /catalog/exports/{format} and /catalog/datasets/{dataset_id}/exports/{format}
+    description: >-
+      A materialisation of the catalogue or a dataset in a chosen format — csv,
+      json, xlsx, parquet, gpx, geojson, rdf, ttl, dublin_core, dcat and the
+      dcat_ap_* national profiles.
+  - name: Link
+    id_field: rel
+    description: A {rel, href} navigation link; every catalogue, dataset, record and facet payload embeds a _links array.
+relationships:
+  - {from: Domain, to: Catalog, kind: has_one, via: /catalog}
+  - {from: Catalog, to: Dataset, kind: has_many, via: results}
+  - {from: Dataset, to: Field, kind: has_many, via: fields}
+  - {from: Dataset, to: Record, kind: has_many, via: /records}
+  - {from: Dataset, to: Attachment, kind: has_many, via: attachments}
+  - {from: Dataset, to: Facet, kind: has_many, via: /facets}
+  - {from: Catalog, to: Facet, kind: has_many, via: /catalog/facets}
+  - {from: Facet, to: FacetValue, kind: has_many, via: facets}
+  - {from: Record, to: Dataset, kind: belongs_to, via: dataset_id (path)}
+  - {from: Dataset, to: Export, kind: has_many, via: /exports}
+  - {from: Catalog, to: Export, kind: has_many, via: /catalog/exports}
+  - {from: Dataset, to: Link, kind: has_many, via: _links}
+  - {from: Record, to: Link, kind: has_many, via: _links}
+collection_envelope:
+  fields: [total_count, results, _links]
+  note: Both `datasets` and `records` collections use the identical envelope, so one client shape handles the whole API.
+access_notes:
+  - >-
+    Dataset metadata is anonymous for all 150 datasets (visibility "domain" on
+    every one sampled), but Record access is not: 87 of 100 datasets probed on
+    2026-07-27 returned 403 ForbiddenAccess on /records anonymously. Treat
+    Dataset -> Record as a permissioned edge.
+  - >-
+    Records are capped (limit <= 100 without group_by, offset+limit < 10000); the
+    Export entity is the uncapped path to a whole dataset.
+domain_content:
+  themes:
+    - Embedded capacity register and generation connections
+    - Historic substation demand and feeder utilisation curves
+    - LV monitoring and network flow
+    - Smart-meter penetration by transformer
+    - Substation and licence-area geographic polygons (DFES, GSP, PSS, grid group)
+    - Flexibility, connections insight and competition polygons
+    - Weekly substation carbon estimates
+    - Per-dataset data-quality check scores

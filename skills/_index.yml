@@ -1,0 +1,28 @@
+generated: '2026-07-27'
+method: generated
+source: >-
+  Packaged Agent Skills generated from
+  openapi/scottishpower-spen-open-data-explore-api-openapi.json. Every step is
+  grounded in an operationId grepped verbatim from that spec; the cross-cutting
+  rules cite ../conventions/, ../errors/, ../rate-limits/ and
+  ../authentication/, and the runtime behaviour cited was verified live against
+  the API on 2026-07-27. Searched first for provider-published skills or an
+  AGENTS.md — none exists; ScottishPower's own hosts return 403 to anonymous
+  clients and the portal serves no llms.txt.
+description: >-
+  Three skills covering the whole usable surface of ScottishPower's only public
+  API: find and query a dataset, bulk export one, and harvest the catalogue as
+  DCAT. All read-only, because the API is GET-only.
+skills:
+  - file: scottishpower-find-and-query-a-dataset.md
+    name: Find and query an SP Energy Networks dataset
+    api: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+    operations: [getDatasets, getDatasetsFacets, getDataset, getRecords]
+  - file: scottishpower-bulk-export-a-dataset.md
+    name: Bulk export an SP Energy Networks dataset
+    api: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+    operations: [getDataset, listDatasetExportFormats, exportRecords, exportRecordsCSV, exportRecordsParquet, exportRecordsGPX, getDatasetAttachments]
+  - file: scottishpower-harvest-catalog-dcat.md
+    name: Harvest the SP Energy Networks catalogue as DCAT
+    api: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+    operations: [getDatasets, listExportFormats, exportCatalogDCAT, exportCatalogCSV, exportDatasets]

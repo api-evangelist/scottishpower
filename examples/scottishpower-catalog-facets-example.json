@@ -1,0 +1,31 @@
+{
+  "links": [
+    {
+      "rel": "self",
+      "href": "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/facets"
+    },
+    {
+      "rel": "source",
+      "href": "https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog"
+    }
+  ],
+  "facets": [
+    {
+      "name": "publisher",
+      "facets": [
+        {
+          "name": "SP Energy Networks SC389555",
+          "count": 145,
+          "state": "displayed",
+          "value": "SP Energy Networks SC389555"
+        },
+        {
+          "name": "SP Distribution SC189125",
+          "count": 1,
+          "state": "displayed",
+          "value": "SP Distribution SC189125"
+        }
+      ]
+    }
+  ]
+}

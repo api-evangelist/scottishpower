@@ -95,6 +95,8 @@ apis:
   properties:
   - type: OpenAPI
     url: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+  - type: Overlay
+    url: overlays/scottishpower-spen-open-data-explore-api-overlay.yaml
   - type: APIReference
     url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
   - type: Documentation
@@ -135,6 +137,64 @@ apis:
   - type: Licensing
     url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
 common:
+- type: VulnerabilityDisclosure
+  url: security/scottishpower-vulnerability-disclosure.yml
+- type: Security
+  name: RFC 9116 security.txt served on the API host (Opendatasoft platform contact)
+  url: https://spenergynetworks.opendatasoft.com/.well-known/security.txt
+- type: DomainSecurity
+  url: security/scottishpower-domain-security.yml
+- type: Authentication
+  url: authentication/scottishpower-authentication.yml
+- type: WellKnown
+  url: well-known/scottishpower-well-known.yml
+- type: SecurityTxt
+  url: well-known/scottishpower-security.txt
+- type: Conventions
+  url: conventions/scottishpower-conventions.yml
+- type: Idempotency
+  name: Read-only contract — GET only, so every operation is safe and idempotent
+  url: conventions/scottishpower-conventions.yml
+- type: ErrorCatalog
+  url: errors/scottishpower-problem-types.yml
+- type: RateLimits
+  url: rate-limits/scottishpower-rate-limits.yml
+- type: Lifecycle
+  url: lifecycle/scottishpower-lifecycle.yml
+- type: Deprecation
+  name: Versioning and deprecation policy (ODS-Explore-API-Deprecation header)
+  url: https://help.opendatasoft.com/apis/ods-explore-v2/
+- type: ChangeLog
+  url: changelog/scottishpower-changelog.yml
+- type: Conformance
+  url: conformance/scottishpower-conformance.yml
+- type: DataModel
+  url: data-model/scottishpower-data-model.yml
+- type: Examples
+  url: examples/_index.yml
+- type: Packages
+  url: packages/scottishpower-packages.yml
+- type: Components
+  url: components/scottishpower-components.yml
+- type: MCPServer
+  name: Candidate MCP tool surface derived from the OpenAPI (no provider-operated server)
+  url: mcp/scottishpower-mcp.yml
+- type: ToolCrosswalk
+  url: mcp/scottishpower-tool-crosswalk.yml
+- type: AgentSkill
+  url: skills/_index.yml
+- type: LLMsTxt
+  url: llms/scottishpower-llms.txt
+- type: DeveloperPortal
+  url: https://spenergynetworks.opendatasoft.com/
+- type: APIReference
+  url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+- type: GettingStarted
+  url: https://spenergynetworks.opendatasoft.com/explore/
+- type: SignUp
+  url: https://spenergynetworks.opendatasoft.com/signup/
+- type: Login
+  url: https://spenergynetworks.opendatasoft.com/login/
 - type: Website
   url: https://www.scottishpower.co.uk/
 - type: Website

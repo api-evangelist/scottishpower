@@ -1,0 +1,64 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Binds every candidate MCP tool in mcp/scottishpower-mcp.yml to its backing
+  operationId in
+  openapi/scottishpower-spen-open-data-explore-api-openapi.json. Every
+  operationId below was grepped verbatim out of that spec.
+description: >-
+  ScottishPower has no MCP server and no GraphQL surface, so this crosswalk is a
+  1:1 REST binding of a derived tool set rather than a reconciliation of two
+  divergent live surfaces. It is emitted anyway because it is the artifact that
+  gives each candidate tool a real input schema — each tool inherits the
+  parameters and responses of its backing operation — and because it records
+  that the divergence set is empty: no MCP-only capability, no GraphQL-only
+  capability, and no REST operation left unwrapped.
+surfaces:
+  openapi:
+    file: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+    base_url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
+    gated: false
+    note: >-
+      Anonymous and CORS-open for the catalogue. Per-dataset record access is
+      frequently 403 without credentials (see coverage note).
+  graphql:
+    endpoint: null
+    gated: null
+    note: Probed /graphql on the portal host — HTTP 404. No GraphQL surface exists.
+  mcp:
+    url: null
+    gated: null
+    note: >-
+      No provider-operated MCP server. tools/list could not be called because
+      there is no endpoint to call. Tools below are derived, status candidate.
+crosswalk:
+  - {tool: list_datasets, category: catalog, rest: [getDatasets], binding: rest, confidence: high}
+  - {tool: list_catalog_export_formats, category: catalog, rest: [listExportFormats], binding: rest, confidence: high}
+  - {tool: export_catalog, category: catalog, rest: [exportDatasets], binding: rest, confidence: high}
+  - {tool: export_catalog_csv, category: catalog, rest: [exportCatalogCSV], binding: rest, confidence: high}
+  - {tool: export_catalog_dcat, category: catalog, rest: [exportCatalogDCAT], binding: rest, confidence: high, note: DCAT-AP RDF/XML harvest export; format suffix is a path parameter.}
+  - {tool: list_catalog_facets, category: catalog, rest: [getDatasetsFacets], binding: rest, confidence: high}
+  - {tool: get_dataset, category: catalog, rest: [getDataset], binding: rest, confidence: high}
+  - {tool: query_records, category: dataset, rest: [getRecords], binding: rest, confidence: high, note: The marquee tool — ODSQL select/where/group_by/order_by over one dataset.}
+  - {tool: get_record, category: dataset, rest: [getRecord], binding: rest, confidence: high}
+  - {tool: list_record_facets, category: dataset, rest: [getRecordsFacets], binding: rest, confidence: high}
+  - {tool: list_dataset_export_formats, category: dataset, rest: [listDatasetExportFormats], binding: rest, confidence: high}
+  - {tool: export_dataset, category: dataset, rest: [exportRecords], binding: rest, confidence: high}
+  - {tool: export_dataset_csv, category: dataset, rest: [exportRecordsCSV], binding: rest, confidence: high}
+  - {tool: export_dataset_parquet, category: dataset, rest: [exportRecordsParquet], binding: rest, confidence: high}
+  - {tool: export_dataset_gpx, category: dataset, rest: [exportRecordsGPX], binding: rest, confidence: high}
+  - {tool: list_dataset_attachments, category: dataset, rest: [getDatasetAttachments], binding: rest, confidence: high}
+mcp_only: []
+graphql_only: []
+rest_only: []
+coverage:
+  tools_named: 16
+  tools_bound: 16
+  mcp_only: 0
+  graphql_only: 0
+  rest_operations_total: 16
+  rest_operations_with_a_tool: 16
+  note: >-
+    Complete 1:1 coverage because the tool set was derived from the spec. This
+    is a floor, not a measurement of a live MCP server — re-derive if
+    ScottishPower or SP Energy Networks ever ships one.

@@ -1,0 +1,94 @@
+overlay: 1.0.0
+info:
+  title: API Evangelist enhancements for the SP Energy Networks Open Data Explore API
+  version: 1.0.0
+extends: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+x-generated: '2026-07-27'
+x-method: generated
+x-source: >-
+  Captures the API Evangelist enrichment round of 2026-07-27 as overlay actions
+  rather than mutating the harvested spec. Every value below is either an
+  artifact cross-reference or something verified live against
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1 on that date —
+  notably the 403 ForbiddenAccess response, which the running service returns
+  but the published contract does not declare.
+actions:
+  - target: $.info
+    update:
+      x-apievangelist-provider: scottishpower
+      x-apievangelist-enriched: '2026-07-27'
+      x-apievangelist-artifacts:
+        authentication: authentication/scottishpower-authentication.yml
+        conventions: conventions/scottishpower-conventions.yml
+        errors: errors/scottishpower-problem-types.yml
+        lifecycle: lifecycle/scottishpower-lifecycle.yml
+        rate_limits: rate-limits/scottishpower-rate-limits.yml
+        data_model: data-model/scottishpower-data-model.yml
+        conformance: conformance/scottishpower-conformance.yml
+        mcp: mcp/scottishpower-mcp.yml
+        tool_crosswalk: mcp/scottishpower-tool-crosswalk.yml
+        skills: skills/_index.yml
+        examples: examples/
+      x-apievangelist-note: >-
+        Read-only contract — GET only, therefore every operation is safe and
+        idempotent. Catalogue is anonymous; most datasets refuse /records
+        anonymously with 403 ForbiddenAccess.
+
+  - target: $.info
+    update:
+      x-rate-limit:
+        anonymous_requests_per_day: 5000
+        headers: [X-RateLimit-Limit, X-RateLimit-Remaining, X-RateLimit-Reset]
+        reset: daily at 00:00:00+00:00
+        verified: '2026-07-27'
+      x-deprecation-header: ODS-Explore-API-Deprecation
+      x-cors:
+        allow_origin: "*"
+        allow_methods: [POST, GET, OPTIONS]
+      x-licence:
+        name: SP Energy Networks Open Data Licence
+        based_on: Creative Commons Attribution 4.0 International Public Licence
+        url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
+
+  - target: $.paths['/catalog/datasets/{dataset_id}/records'].get
+    update:
+      x-access-note: >-
+        Frequently 403 anonymously. In a 100-dataset probe on 2026-07-27, 13
+        datasets returned 200 and 87 returned 403 ForbiddenAccess. Handle 403 as
+        an expected per-dataset outcome, not an exception.
+      responses:
+        '403':
+          description: >-
+            Forbidden — the dataset's records are not readable by the calling
+            identity. Returned live by the service but not declared in the
+            published contract. Body: {"error_code": "ForbiddenAccess",
+            "message": "You don't have permission to access the requested
+            resource"}.
+        '404':
+          description: >-
+            Not found — the dataset_id does not exist on this domain. Returned
+            live but not declared in the published contract. Body:
+            {"error_code": "NotFoundResource", "message": "The requested dataset
+            <id> does not exist."}.
+
+  - target: $.paths['/catalog/datasets/{dataset_id}'].get
+    update:
+      responses:
+        '404':
+          description: >-
+            Not found — unknown dataset_id. Observed live 2026-07-27; not
+            declared in the published contract.
+
+  - target: $.paths['/catalog/datasets'].get
+    update:
+      x-apievangelist-example: examples/scottishpower-list-datasets-example.json
+      x-catalog-size-at-harvest: 150
+
+  - target: $.components.securitySchemes.apikey
+    update:
+      x-optional: true
+      x-header-alternative: 'Authorization: Apikey <API_KEY>'
+      x-keys-from: https://spenergynetworks.opendatasoft.com/account/api-keys/
+      x-anonymous-note: >-
+        Not required for the catalogue; raises quota and unlocks
+        account-visible datasets.

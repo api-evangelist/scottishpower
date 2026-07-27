@@ -1,0 +1,116 @@
+generated: '2026-07-27'
+method: searched
+format: custom-json
+rfc9457: false
+source: >-
+  Derived from the 4xx/5xx responses and components.responses (bad_request,
+  quota) in openapi/scottishpower-spen-open-data-explore-api-openapi.json, then
+  enriched by triggering each error live against
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1 on 2026-07-27. Every
+  error_code below was observed in a real response body — none is inferred.
+description: >-
+  The SP Energy Networks Open Data Explore API does not use RFC 9457
+  application/problem+json. It returns three different JSON envelope shapes
+  depending on the failure class, which is the main thing a client (or an agent)
+  has to normalise. The 403 ForbiddenAccess case is the operationally important
+  one: it is the routine answer for most datasets' record endpoints when called
+  anonymously, not an exceptional condition.
+envelopes:
+  - name: client_error
+    media_type: application/json
+    shape: '{ "error_code": string, "message": string }'
+    applies_to: [400, 403, 404]
+  - name: unauthorized
+    media_type: application/json
+    shape: '{ "error": string }'
+    applies_to: [401]
+  - name: quota
+    media_type: application/json
+    shape: '{ "errorcode": number, "error": string, "call_limit": number, "limit_time_unit": string, "reset_time": string }'
+    applies_to: [429]
+problems:
+  - status: 400
+    error_code: ODSQLError
+    title: ODSQL query is malformed
+    meaning: The ODSQL expression referenced something the dataset does not have, such as an unknown field.
+    example_message: 'ODSQL query is malformed: Unknown field: notafield. Clause(s) containing the error(s): select.'
+    remediation: Call getDataset first and select only fields present in its schema.
+    verified: '2026-07-27'
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getDatasets
+  - status: 400
+    error_code: ODSQLSyntaxError
+    title: ODSQL syntax exception
+    meaning: The ODSQL expression does not parse.
+    example_message: 'ODSQL syntax exception: unexpected ( at position 16 in invalid_function(). Clause(s) containing the error(s): where.'
+    remediation: Check the clause named in the message against the ODSQL reference; only documented functions exist.
+    verified: '2026-07-27'
+  - status: 400
+    error_code: InvalidRESTParameterError
+    title: Invalid value for a REST parameter
+    meaning: A parameter is outside its declared range — most commonly limit.
+    example_message: 'Invalid value for limit API parameter: 99999 was found but -1 <= limit <= 100 is expected.'
+    remediation: Keep limit <= 100 without a group_by (<= 20000 with one), and use the /exports endpoints for bulk extraction.
+    verified: '2026-07-27'
+  - status: 400
+    error_code: InvalidExportFormat
+    title: Invalid export format
+    meaning: The requested export format is not one the platform supports.
+    example_message: 'Invalid export format. Available formats are csv, json, data.json, rdf, ttl, dublin_core, dcat, dcat_ap_ch, dcat_ap_de, dcat_ap_se, dcat_ap_sp, dcat_ap_it, dcat_ap_vl, dcat_ap_benap, rss, sitemap, xlsx.'
+    remediation: Call listExportFormats / listDatasetExportFormats and use one of the returned formats.
+    verified: '2026-07-27'
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#exportDatasets
+  - status: 401
+    error_code: null
+    title: Unauthorized
+    meaning: An API key was supplied but is not valid.
+    example_message: '{"error": "API key is not valid"}'
+    remediation: Regenerate the key at https://spenergynetworks.opendatasoft.com/account/api-keys/ or drop the key entirely — the catalogue is anonymous.
+    verified: '2026-07-27'
+    note: 'Uses the {"error": ...} envelope, not {"error_code", "message"}.'
+  - status: 403
+    error_code: ForbiddenAccess
+    title: You don't have permission to access the requested resource
+    meaning: >-
+      The dataset's records are not readable by the calling identity. This is the
+      normal anonymous outcome for most SP Energy Networks datasets even though
+      their metadata is public.
+    example_message: "You don't have permission to access the requested resource"
+    remediation: >-
+      Fall back to the dataset metadata (getDataset) or supply an API key from a
+      portal account. Expect it: in a 100-dataset probe on 2026-07-27, 87 of 100
+      datasets returned 403 on /records anonymously and only 13 returned 200.
+    verified: '2026-07-27'
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getRecords
+  - status: 404
+    error_code: NotFoundResource
+    title: The requested dataset does not exist
+    meaning: The dataset_id (or record_id) in the path is unknown on this domain.
+    example_message: 'The requested dataset nope does not exist.'
+    remediation: Resolve the identifier with getDatasets before addressing it.
+    verified: '2026-07-27'
+    source_operation: openapi/scottishpower-spen-open-data-explore-api-openapi.json#getDataset
+  - status: 429
+    error_code: '10002'
+    title: Too many requests
+    meaning: The daily request quota for the calling client on this domain is exhausted.
+    example_message: 'Too many requests on the domain. Please contact the domain administrator.'
+    remediation: >-
+      Back off until reset_time (next UTC midnight); read X-RateLimit-Remaining
+      proactively. See rate-limits/scottishpower-rate-limits.yml.
+    source: components.responses.quota (spec example; not triggered live)
+    verified: false
+  - status: 500
+    error_code: null
+    title: Internal Server Error
+    meaning: Declared on every operation in the spec; no body schema is published.
+    remediation: Retry — every operation is a GET and therefore safe to retry.
+    verified: false
+undeclared_in_spec:
+  - >-
+    403 ForbiddenAccess is returned live but is NOT declared on any operation in
+    the harvested OpenAPI, which lists only 200/400/401/429/500. This is a real
+    gap between the published contract and the running service, and it is the
+    single most likely failure a new client will hit.
+  - >-
+    404 NotFoundResource is returned live on unknown dataset ids but is likewise
+    not declared in the spec.

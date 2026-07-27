@@ -1,0 +1,125 @@
+generated: '2026-07-27'
+method: derived
+source: >-
+  Derived from openapi/scottishpower-spen-open-data-explore-api-openapi.json
+  (securitySchemes, error schemas, pagination parameters, export formats), live
+  response headers and error bodies observed 2026-07-27, and the Opendatasoft
+  Explore API v2.1 documentation. Regulatory items are derived from the UK energy
+  regime, with the negative findings stated as plainly as the positive ones.
+description: >-
+  Which cross-cutting and sector standards the ScottishPower / SP Energy Networks
+  public API surface actually conforms to. The pattern is the finding: the open
+  network-data side conforms to a real stack of open-data and web standards
+  (OpenAPI 3.0.3, DCAT-AP, CC BY 4.0, RFC 9116, CORS, HSTS), and the consumer
+  side conforms to nothing because it exposes nothing.
+standards:
+  - id: openapi-3.0
+    conforms: true
+    evidence: >-
+      openapi 3.0.3 document served at
+      https://spenergynetworks.opendatasoft.com/api/explore/v2.1/swagger.json,
+      HTTP 200, 16 paths, all operations with operationId, summary, tags and
+      2xx/4xx responses.
+  - id: rest
+    conforms: true
+    evidence: Hierarchical resource paths, GET-only, JSON responses, HATEOAS-style links[] in every payload.
+  - id: api-key-auth
+    conforms: true
+    evidence: >-
+      OpenAPI securityScheme "apikey" (apiKey, in query); docs also accept
+      "Authorization: Apikey <KEY>". Optional — the catalogue is anonymous.
+  - id: oauth2
+    conforms: false
+    evidence: >-
+      The Opendatasoft platform documents an RFC 6749 authorization-code flow with
+      RFC 6750 bearer tokens, but it is not enabled on this domain —
+      /api/oauth2/authorize and /api/oauth2/token both return HTTP 404.
+  - id: oidc
+    conforms: false
+    evidence: /.well-known/openid-configuration returns 404 on the API host; 403 on ScottishPower's own hosts.
+  - id: rfc8414-oauth-authorization-server-metadata
+    conforms: false
+    evidence: /.well-known/oauth-authorization-server returns 404 on the API host.
+  - id: rfc9457-problem-details
+    conforms: false
+    evidence: >-
+      Errors are custom JSON ({error_code, message} / {error} / quota shape), not
+      application/problem+json. See errors/scottishpower-problem-types.yml.
+  - id: rfc9116-security-txt
+    conforms: true
+    evidence: >-
+      /.well-known/security.txt returns HTTP 200 text/plain with Contact,
+      Expires and Preferred-Languages on the API host. Platform-level
+      (Opendatasoft), saved at well-known/scottishpower-security.txt.
+  - id: rfc8594-sunset-header
+    conforms: false
+    evidence: >-
+      No Sunset or Deprecation header. Deprecation is signalled by the
+      proprietary ODS-Explore-API-Deprecation header instead.
+  - id: rfc6585-rate-limit-signalling
+    conforms: partial
+    evidence: >-
+      429 with X-RateLimit-Limit / -Remaining / -Reset observed live; uses the
+      de-facto X-RateLimit-* convention rather than the draft
+      RateLimit-* / Retry-After standard headers.
+  - id: cors
+    conforms: true
+    evidence: 'access-control-allow-origin: * with an explicit expose-headers list including the rate-limit and deprecation headers.'
+  - id: hsts
+    conforms: true
+    evidence: 'strict-transport-security: max-age=31536000;includeSubdomains on the API host. See security/scottishpower-domain-security.yml.'
+  - id: dcat-ap
+    conforms: true
+    evidence: >-
+      Catalogue exports RDF/XML DCAT via exportCatalogDCAT; the platform also
+      offers dcat_ap_ch/de/se/sp/it/vl/benap national profiles. Verified HTTP 200
+      with application/rdf+xml.
+  - id: cc-by-4.0
+    conforms: true
+    evidence: >-
+      The SP Energy Networks Open Data Licence states it is based on the Creative
+      Commons Attribution 4.0 International Public Licence.
+  - id: geojson
+    conforms: true
+    evidence: GeoJSON and GPX export formats are offered on the dataset export endpoints.
+  - id: apache-parquet
+    conforms: true
+    evidence: exportRecordsParquet — Parquet export endpoint declared in the spec and offered by the platform.
+  - id: ofgem-data-best-practice
+    conforms: true
+    evidence: >-
+      SP Energy Networks operates a public open data portal with 150 datasets
+      under a presumed-open licence, which is the behaviour Ofgem's Data Best
+      Practice Guidance requires of electricity network licensees under RIIO-ED2
+      Special Licence Condition 9.5. Conformance is asserted from observable
+      behaviour, not from an audited certification.
+  - id: uk-consumer-energy-data-right
+    conforms: false
+    evidence: >-
+      No such regime exists in Great Britain. There is no Consumer Data Right, no
+      Green Button mandate and no consumer energy data-portability obligation, and
+      ScottishPower publishes no consumer-facing API — so there is nothing to
+      conform to and nothing conformed to.
+  - id: smart-energy-code-dcc
+    conforms: unverifiable
+    evidence: >-
+      ScottishPower's smart-metering obligation runs through the Smart DCC under
+      the Smart Energy Code, which is a licensed-party infrastructure monopoly, not
+      a public API. No public register entry or endpoint could be verified from
+      outside — smartenergycodecompany.co.uk returns 403 to anonymous clients.
+  - id: fhir-r4
+    conforms: false
+  - id: odata
+    conforms: false
+  - id: json-api
+    conforms: false
+  - id: scim
+    conforms: false
+certifications_published: []
+compliance_note: >-
+  No SOC 2, ISO 27001, PCI DSS, HIPAA, FedRAMP or CSA STAR certification is
+  published for this API by ScottishPower or SP Energy Networks, and no trust
+  centre was found (trust.opendatasoft.com and opendatasoft.com/trust both 404;
+  ScottishPower's own hosts return 403 to every anonymous request). No
+  `Compliance` pointer is emitted, because none of these standards is backed by a
+  published compliance programme.

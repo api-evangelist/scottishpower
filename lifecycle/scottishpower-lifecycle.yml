@@ -1,0 +1,109 @@
+generated: '2026-07-27'
+method: searched
+source: >-
+  https://help.opendatasoft.com/apis/ods-explore-v2/ (Versioning, Deprecation
+  warnings and Changelog sections), live header observation against
+  https://spenergynetworks.opendatasoft.com/api/explore/v2.1 on 2026-07-27, and
+  openapi/scottishpower-spen-open-data-explore-api-openapi.json.
+description: >-
+  Versioning, deprecation and availability posture for the SP Energy Networks
+  Open Data Explore API. There is a genuine, documented versioning and
+  deprecation policy — including a machine-readable deprecation header exposed
+  to browsers — but it belongs to the Opendatasoft platform, not to
+  ScottishPower. There is no status page and no published SLA for this API from
+  either party.
+versioning:
+  scheme: uri-path
+  current: v2.1
+  base_path: /api/explore/v2.1
+  docs: https://help.opendatasoft.com/apis/ods-explore-v2/
+  guarantees:
+    - ODSQL is backward compatible — new syntax never replaces existing syntax.
+    - Response bodies are stable — new keys can be added, existing keys are never renamed or deleted.
+    - URLs and endpoints are stable.
+  breaking_change_policy: >-
+    A breaking change (a violation of any guarantee above) is only ever shipped
+    inside a new API version with its own stable URL; the current version keeps
+    its behaviour. Release notes are communicated when a new version ships.
+  predecessor:
+    version: v2.0
+    status: retired
+    note: >-
+      /api/explore/v2.0/.../aggregates and /query were removed in v2.1 and merged
+      into the single records endpoint; several output schemas changed.
+  parallel_surface:
+    name: Search API v1.0
+    base_path: /api/datasets/1.0
+    status: live-but-superseded
+    verified: '2026-07-27'
+    note: Still returns HTTP 200 with nhits 150 on the same host; new integrations should use v2.1.
+deprecation:
+  policy_url: https://help.opendatasoft.com/apis/ods-explore-v2/
+  documented: true
+  sunset_header: false
+  rfc8594: false
+  header: ODS-Explore-API-Deprecation
+  header_format: '<FEATURE_ID>: deprecation message (multiple messages separated by ";")'
+  header_example: >-
+    DATE_KEYS_AS_ISOFORMAT: Dates used in group keys are currently returned as
+    timestamps and will be returned as standard formatted date strings in the
+    next API version
+  link_header: Link — carries the URL of the version changelog.
+  browser_visible: true
+  evidence: >-
+    ODS-Explore-API-Deprecation and Link are both listed in
+    access-control-expose-headers on every live response observed 2026-07-27, so
+    a browser client can actually read the deprecation warning.
+  provenance: >-
+    Platform-level policy published by Opendatasoft and inherited by the SPEN
+    portal. ScottishPower publishes no API deprecation policy of its own.
+sla:
+  url: null
+  uptime_target: null
+  note: >-
+    No SLA is published for this API by SP Energy Networks or by Opendatasoft for
+    the public open-data tier. Ofgem's Data Best Practice Guidance (RIIO-ED2
+    Special Licence Condition 9.5) obliges the licensee to treat its data as
+    presumed open but does not set an API availability target.
+status_page: null
+status_page_probes:
+  - {url: 'https://status.opendatasoft.com/', http_status: 404, date: '2026-07-27'}
+  - {url: 'https://www.spenergynetworks.co.uk/pages/energy_data_hub.aspx', http_status: 403, date: '2026-07-27', note: bot-blocked}
+status_page_note: >-
+  No status page exists for this API on either the platform or the provider
+  side. Availability has to be inferred by calling the API.
+deprecated_operations: []
+deprecated_features:
+  - feature: Grouping by geo fields
+    replacement: geo_cluster() grouping function
+    source: Explore API v2.1 changelog
+  - feature: distance()
+    replacement: within_distance()
+    source: Explore API v2.1 changelog (old function names still available)
+  - feature: 'geometry(geom1, geom2, INTERSECTS|DISJOINT|WITHIN)'
+    replacement: intersects() / disjoint() / within()
+    source: Explore API v2.1 changelog (old function names still available)
+  - feature: XLS export format
+    replacement: XLSX
+    source: Explore API v2.1 changelog
+event_surface:
+  asyncapi: null
+  webhooks: false
+  streaming: false
+  change_feeds:
+    - /explore/dataset/{dataset_id}/rss/
+    - /explore/dataset/{dataset_id}/atom/
+  note: >-
+    No AsyncAPI, no webhooks, no streaming endpoint — probed /asyncapi.yaml
+    (404) and found no event catalogue. Per-dataset RSS/Atom feeds are the only
+    change-notification surface and they are poll-based, so no AsyncAPI or
+    Webhooks artifact is emitted rather than fabricating one.
+data_lifecycle:
+  dataset_count_at_harvest: 150
+  publishers: [SP Energy Networks SC389555 (145 datasets), SP Distribution SC189125 (1 dataset)]
+  licence: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
+  licence_basis: Creative Commons Attribution 4.0 International Public Licence
+  regulatory_driver: >-
+    Ofgem Data Best Practice Guidance, made a licence condition under RIIO-ED2
+    (Special Licence Condition 9.5) — electricity network licensees must treat
+    their data as "presumed open".
