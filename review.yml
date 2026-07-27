@@ -1,0 +1,501 @@
+aid: scottishpower
+name: ScottishPower
+review:
+  question: >-
+    Does ScottishPower expose a real, verifiable public API surface, and which
+    energy data obligation actually binds it — an implemented consumer data right,
+    an infrastructure mandate, or an open-network-data licence condition?
+  answer: >-
+    Yes to a real API surface, but not from the part of the company you would
+    expect, and not because of any consumer data right. ScottishPower's retail
+    supply business publishes nothing: no developer portal, no self-serve API, no
+    documented route to an individual customer's usage or billing data, and a
+    corporate website that returns HTTP 403 to every anonymous client. Its
+    regulated network arm, SP Energy Networks, publishes a genuinely open,
+    anonymous, OpenAPI-documented data API over 150 datasets — because Ofgem made
+    "presumed open" a licence condition on network operators. Britain mandated the
+    infrastructure and the network data; it never mandated the consumer's data
+    right. ScottishPower is that sentence in one company.
+  date: '2026-07-27'
+  reviewer: API Evangelist
+  homeMarket: United Kingdom
+  tier: utility-retailer
+  corporateStructure: >-
+    Scottish Power Limited, Glasgow; wholly owned by Iberdrola S.A. (Spain) since
+    2007. Three regulated/commercial arms matter here: ScottishPower Energy Retail
+    (licensed GB electricity and gas supplier), SP Energy Networks (licensed DNO
+    for SP Distribution — central and southern Scotland — and SP Manweb —
+    Merseyside, Cheshire, North Wales — plus transmission owner SP Transmission),
+    and ScottishPower Renewables. The open data portal is operated by SP Energy
+    Networks and its footer reads "(c) 2024 Scottish Power Ltd. All rights
+    reserved.", which is the link this profile relies on to attribute it to
+    ScottishPower rather than to a separate company.
+
+mandate:
+  regime: smart-meter-infrastructure
+  regimeName: >-
+    Great Britain's smart-metering programme. The Data Communications Company
+    (Smart DCC, a Capita subsidiary) holds the Smart Meter Communication Licence
+    granted by the Secretary of State and regulated by Ofgem, operating as a
+    licensed monopoly carrying SMETS2 smart-meter traffic. Access is governed by
+    the Smart Energy Code (SEC), administered by SECAS; every licensed GB energy
+    supplier must become a SEC Party and complete the User Entry Process to become
+    a DCC User. This is an INFRASTRUCTURE mandate, not a consumer data right — it
+    compels the existence of a shared communications network for licensed parties,
+    and it confers no portability right on a consumer and no access route for an
+    unaffiliated developer.
+  status: live-claimed-unverified
+  designated: true
+  designationDetail: >-
+    ScottishPower Energy Retail is a licensed GB supplier and therefore falls
+    inside the SEC/DCC regime by construction; it installs and operates SMETS2
+    meters, and Ofgem has separately approved an SP Energy Networks data privacy
+    plan for access to household electricity smart metering data on the network
+    side. Coverage is not in question.
+  verifiedHow: >-
+    Not verified. Deliberately recorded as live-claimed-unverified rather than
+    live-implemented. Unlike Australia's CDR — where the ACCC publishes a machine
+    readable register and every data holder answers conformant discovery endpoints
+    anonymously — Britain publishes no equivalent public register that could be
+    called, and no ScottishPower-operated endpoint exists to probe.
+    smartenergycodecompany.co.uk returned HTTP 403 to every anonymous request
+    including /sec-parties/, www.smartdcc.co.uk returned HTTP 200 but exposes no
+    machine-readable user list (the /media/... list-of-dcc-users.pdf path returned
+    404), and every scottishpower.co.uk path returned HTTP 403. There is no
+    endpoint, register entry, or standards-conformant surface that this review was
+    able to call to prove ScottishPower's DCC User status. The obligation is real;
+    the implementation was not verifiable from outside, so it is not claimed.
+  claimVsImplementation: >-
+    ScottishPower makes no verifiable public claim either, because nothing on its
+    own domain can be read programmatically. www.scottishpower.co.uk returns HTTP
+    403 on /, /robots.txt, /developers, /api, /docs, /data, /openapi.json,
+    /swagger.json, /api-docs, /.well-known/security.txt and
+    /.well-known/openid-configuration. Its own community forum at
+    community.scottishpower.co.uk is also 403. The only evidence of a
+    ScottishPower API programme found anywhere is a WSO2 vendor customer story
+    describing a WSO2 API Manager deployment used to "expose APIs securely" to
+    external partners and third parties — a partner-gated internal estate, given no
+    weight as a public developer programme.
+
+secondMandate:
+  regime: other
+  regimeName: >-
+    Ofgem Data Best Practice Guidance, made binding on energy network licensees as
+    a licence condition under the RIIO-2 price controls (RIIO-ED2 Special Licence
+    Condition 9.5 for electricity distribution). Eleven principles, the operative
+    one being "presumed open": network data is open by default unless the licensee
+    can evidence a specific reason — privacy, security, commercial — to withhold or
+    modify it, a process the industry calls Data Triage.
+  bindsWhichArm: SP Energy Networks (SP Distribution, SP Manweb, SP Transmission)
+  status: live-implemented
+  verifiedHow: >-
+    Verified by calling it anonymously on 2026-07-27, not by reading a compliance
+    page. The SP Energy Networks Open Data Portal at
+    spenergynetworks.opendatasoft.com returned HTTP 200; GET
+    /api/explore/v2.1/catalog/datasets returned HTTP 200 with total_count 150 and
+    no credentials of any kind; GET /api/explore/v2.1/swagger.json returned HTTP
+    200 with a parseable OpenAPI 3.0.3 document (16 paths, servers[0].url set to
+    SPEN's own base URL) which was harvested verbatim; the legacy
+    /api/datasets/1.0/search/ returned HTTP 200 with nhits 150; the DCAT-AP
+    catalogue export returned HTTP 200 with 4.2 MB of application/rdf+xml. The
+    portal separately publishes Data Triage risk assessments and per-dataset data
+    quality scores (datasets whose ids begin spen_data_quality_*), which is the
+    Data Best Practice process itself made public. This is the rare case in this
+    study where a mandate and an implementation are both present and both provable.
+  note: >-
+    This is a NETWORK-data obligation. It says nothing about a household's own
+    consumption record and confers no portability right. It is recorded separately
+    from the primary regime precisely so the two are never conflated.
+
+consumerDataRight:
+  exists: false
+  detail: >-
+    The United Kingdom has no consumer energy data-portability mandate. There is no
+    Consumer Data Right equivalent, no Green Button regulation as in Ontario, and no
+    statutory obligation on a GB supplier to expose an individual customer's
+    consumption or billing data to a nominated third party through an API. The
+    nearest institutional analogues are all wholesale or infrastructure bodies, none
+    of which is ScottishPower and none of which serves the retail customer's record:
+    the Smart DCC (licensed smart-meter comms monopoly), Elexon (Balancing and
+    Settlement Code), and NESO (system operator, publisher of the genuinely open
+    Carbon Intensity API). Britain's API-native supplier is Octopus Energy, whose
+    Kraken platform publishes a real public developer API and is licensed to other
+    utilities — ScottishPower is not a Kraken licensee and offers no comparable
+    surface.
+
+dataStandard:
+  consumerDataStandard: no standard reference found
+  consumerDetail: >-
+    No Green Button / ESPI, no CDR Consumer Data Standards, no IEEE 2030.5, no
+    OpenADR, no OCPP or OCPI, and no IEC CIM 61968/61970 reference was found on any
+    ScottishPower or SP Energy Networks surface that could be read.
+  openDataStandard: >-
+    Opendatasoft Explore API v2.1 — a vendor platform contract, not an energy-sector
+    standard. Published as OpenAPI 3.0.3 with a query language (ODSQL). The one
+    genuine interoperability standard in evidence is the catalogue-level DCAT-AP
+    export at /api/explore/v2.1/catalog/exports/dcat (HTTP 200,
+    application/rdf+xml, 4,221,284 bytes on 2026-07-27). Governance standard is
+    Ofgem Data Best Practice; dataset-level content standards include the Ofgem
+    Embedded Capacity Register format (datasets embedded-capacity-register and
+    embedded-capacity-register-50kv-1mw).
+  documents:
+  - title: Explore API
+    version: v2.1
+    format: OpenAPI 3.0.3
+    paths: 16
+    saved: openapi/scottishpower-spen-open-data-explore-api-openapi.json
+    sourceURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/swagger.json
+    httpStatus: 200
+    fetched: '2026-07-27'
+    parses: true
+    provenanceNote: >-
+      Not ScottishPower-authored. It is the Opendatasoft platform contract as served
+      from SPEN's own host with SPEN's own servers[] base URL. An x-provenance /
+      x-source-url / x-harvested block was added to info; nothing else was altered.
+
+consumerVsMarketData:
+  consumerDataAPI: false
+  consumerDataDetail: >-
+    No. There is no documented API through which a third party can obtain an
+    individual ScottishPower customer's usage or billing data, and no mandate
+    compelling one. Customers can see their own smart-meter charts in the
+    ScottishPower app and web account, which is a customer-account-required UI, not
+    an API. ScottishPower community threads asking for programmatic access to
+    SMETS2 half-hourly data are unresolved. The practical UK workaround —
+    Consumer Access Devices and DCC "other user" intermediaries such as n3rgy or
+    Hildebrand — routes around the supplier entirely rather than through it, which
+    is itself the point: the data exists on a mandated national network and the
+    supplier is not obliged to hand it to you.
+  marketDataOpen: true
+  marketDataDetail: >-
+    Yes, and substantially so — but from the networks arm. 150 datasets served
+    anonymously with a documented OpenAPI, CORS wide open, a per-day quota rather
+    than a gate, and a CC-BY-derived licence. Verified dataset families include the
+    Embedded Capacity Register (Ofgem-required), network flow, historic substation
+    demand curves, LV monitoring, smart-meter penetration by transformer level,
+    secondary substations, transmission generation heat maps, capacity management
+    system, non-firm connections insight, customer connection profiles by census
+    area, weekly substation carbon estimates, and per-dataset data-quality scoring.
+  theSplit: >-
+    This is the sector's defining asymmetry rendered inside a single corporate
+    group. The half of ScottishPower that owns the wires is open by regulation and
+    genuinely callable. The half that owns the customer relationship is closed,
+    unreadable to machines, and under no obligation to be otherwise. An organization
+    can be wide open on one and completely shut on the other — and here it literally
+    is, at the same registered parent company.
+
+accessGate:
+  gate: self-serve
+  gated: false
+  gateAppliesTo: >-
+    The SP Energy Networks open data APIs. For anything touching a ScottishPower
+    retail customer the honest gate is none-published — there is no route at all,
+    self-serve or otherwise.
+  whatADeveloperMustDo: >-
+    For the open network data: nothing. Issue an anonymous HTTPS GET against
+    https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets and
+    you get JSON, with an unauthenticated allowance of 5,000 requests per day
+    (x-ratelimit-limit 5000, x-ratelimit-remaining 4990, x-ratelimit-reset
+    2026-07-28T00:00:00Z observed). Creating a free portal account is self-serve and
+    yields an optional apikey query parameter that raises quotas; it is not required
+    for public datasets. Attribution is required under the SP Energy Networks Open
+    Data Licence, which the portal states is based on Creative Commons Attribution
+    4.0 International. A separate SP Energy Networks Shared Data Licence exists for
+    datasets that Data Triage found could not be published fully openly — that tier
+    is a licence-agreement gate, and it is the exception rather than the default.
+    For a ScottishPower customer's own data: no path exists. No accreditation
+    scheme, no partner form, no sandbox, no key.
+  selfServeSignup: true
+  publicDeveloperPortal: true
+  portalEvidence:
+  - url: https://spenergynetworks.opendatasoft.com/
+    httpStatus: 200
+    title: Home - SPENOpenDataPortal
+    note: >-
+      CONFIRMED developer/data portal. Public, anonymous, no login wall. Footer
+      reads "(c) 2024 Scottish Power Ltd. All rights reserved."
+  - url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+    httpStatus: 200
+    note: Live interactive API console. This is the developer surface.
+  - url: https://developer.scottishpower.co.uk/
+    dnsResolves: false
+    httpStatus: 000
+  - url: https://developers.scottishpower.co.uk/
+    dnsResolves: false
+    httpStatus: 000
+  - url: https://data.scottishpower.co.uk/
+    dnsResolves: false
+    httpStatus: 000
+  - url: https://docs.scottishpower.co.uk/
+    dnsResolves: false
+    httpStatus: 000
+  - url: https://api.scottishpower.co.uk/
+    dnsResolves: true
+    httpStatus: 403
+    note: >-
+      A host exists but is not reachable anonymously and publishes no documentation.
+      NOT counted as a developer portal.
+  - url: https://api.spenergynetworks.co.uk/
+    dnsResolves: false
+    httpStatus: 000
+  - url: https://developer.spenergynetworks.co.uk/
+    dnsResolves: false
+    httpStatus: 000
+
+authModel:
+  openData: >-
+    Effectively none. Anonymous HTTPS GET. The harvested OpenAPI declares a single
+    security scheme — apiKey named "apikey", passed in the query string — and lists
+    it as top-level security, but the portal serves public datasets without it; the
+    key is a quota instrument obtained from a free self-serve account, not an access
+    control. No OAuth, no mTLS, no accreditation.
+  consumerData: >-
+    Not applicable — no consumer-facing API exists. Customer authentication is a
+    conventional web/app login to a ScottishPower account, which returned HTTP 403
+    to every anonymous probe and exposes no documented token endpoint.
+  partnerAPIs: >-
+    Undocumented publicly. The only public account is a WSO2 customer story
+    describing ScottishPower's use of WSO2 API Manager to expose APIs to external
+    partners and third parties. Whatever scheme that estate uses is not published,
+    so none is recorded.
+  openidConfiguration:
+    probed:
+    - url: https://www.scottishpower.co.uk/.well-known/openid-configuration
+      httpStatus: 403
+    result: >-
+      No anonymously served OIDC discovery document was found. The host blocks all
+      non-browser clients, so absence of a document cannot be distinguished from
+      absence of permission to read one — recorded as unknown rather than negative.
+
+probes:
+  date: '2026-07-27'
+  method: curl, anonymous, following redirects, with a desktop browser User-Agent
+  results:
+  - url: https://www.scottishpower.co.uk/
+    httpStatus: 403
+    note: Bot-blocked. Same 403 on every path tried, including /robots.txt.
+  - url: https://www.scottishpower.co.uk/developers
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/api
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/docs
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/data
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/openapi.json
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/swagger.json
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/api-docs
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/robots.txt
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/.well-known/security.txt
+    httpStatus: 403
+  - url: https://www.scottishpower.co.uk/.well-known/openid-configuration
+    httpStatus: 403
+  - url: https://www.scottishpower.com/
+    httpStatus: 403
+  - url: https://developer.scottishpower.co.uk/
+    httpStatus: 000
+    note: NXDOMAIN.
+  - url: https://developers.scottishpower.co.uk/
+    httpStatus: 000
+  - url: https://data.scottishpower.co.uk/
+    httpStatus: 000
+  - url: https://docs.scottishpower.co.uk/
+    httpStatus: 000
+  - url: https://api.scottishpower.co.uk/
+    httpStatus: 403
+    note: Resolves, refuses anonymous clients, no documentation.
+  - url: https://community.scottishpower.co.uk/
+    httpStatus: 403
+    note: >-
+      ScottishPower's own customer community exists and is indexed publicly with
+      threads requesting programmatic smart-meter data access, but could not be read
+      programmatically. Kept in apis.yml common[] as the canonical human URL and
+      recorded here as 403-unreadable.
+  - url: https://www.spenergynetworks.co.uk/
+    httpStatus: 403
+    note: The networks corporate site is bot-blocked too. Only the data portal is open.
+  - url: https://www.spenergynetworks.co.uk/pages/energy_data_hub.aspx
+    httpStatus: 403
+    note: >-
+      SP Energy Networks "Data & Information Sharing" hub. Indexed publicly, listed
+      in apis.yml common[] as the canonical human URL, but 403 to curl and to
+      WebFetch. Given no evidentiary weight; the portal endpoints were called
+      instead.
+  - url: https://www.spenergynetworks.co.uk/pages/power_cuts.aspx
+    httpStatus: 403
+  - url: https://powercuts.spenergynetworks.co.uk/
+    httpStatus: 200
+    note: >-
+      SP Energy Networks live power-cut map. A Salesforce Experience Cloud
+      (webruntime/LWR) single-page app. No documented API, no OpenAPI, no JSON feed
+      referenced in the page source beyond third-party analytics and a TechSee
+      video-support host. NOT recorded as an API.
+  - url: https://spenergynetworks.opendatasoft.com/
+    httpStatus: 200
+    note: SP Energy Networks Open Data Portal. Title "Home - SPENOpenDataPortal".
+  - url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets?limit=1
+    httpStatus: 200
+    note: >-
+      total_count 150. Headers - x-ratelimit-limit 5000, x-ratelimit-remaining 4990,
+      x-ratelimit-reset 2026-07-28 00:00:00+00:00, access-control-allow-origin *,
+      strict-transport-security present. Fully anonymous.
+  - url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/swagger.json
+    httpStatus: 200
+    note: OpenAPI 3.0.3, 16 paths, 45,943 bytes. Harvested and parsed.
+  - url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+    httpStatus: 200
+  - url: https://spenergynetworks.opendatasoft.com/api/datasets/1.0/search/?rows=1
+    httpStatus: 200
+    note: Legacy Opendatasoft Search API v1.0 still live. nhits 150.
+  - url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/exports/dcat
+    httpStatus: 200
+    note: DCAT-AP catalogue export, application/rdf+xml, 4,221,284 bytes.
+  - url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets/spen-weekly-substation-carbon-estimate/records?limit=1
+    httpStatus: 200
+  - url: https://spenergynetworks.opendatasoft.com/terms/
+    httpStatus: 200
+    note: >-
+      SP Energy Networks Open Data Licence, stated verbatim as "based on the
+      Creative Commons Attribution 4.0 International Public Licence".
+  - url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
+    httpStatus: 200
+  - url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-shared-data-licence/
+    httpStatus: 200
+    note: The restricted tier for Data-Triaged datasets that cannot be fully open.
+  - url: https://spenergynetworks.opendatasoft.com/pages/support-help-main/
+    httpStatus: 200
+  - url: https://spenergynetworks.opendatasoft.com/explore/
+    httpStatus: 200
+  - url: https://spenergynetworks.opendatasoft.com/glossary/
+    httpStatus: 200
+  - url: https://spenergynetworks.opendatasoft.com/p/faq/
+    httpStatus: 200
+  - url: https://data.spenergynetworks.co.uk/
+    httpStatus: 000
+    note: Does not resolve. The portal lives on the Opendatasoft-hosted domain.
+  - url: https://api.github.com/users/ScottishPower
+    httpStatus: 200
+    note: >-
+      github.com/ScottishPower is a USER account, not an organization, created
+      2013-12-03, with 0 public repositories, no name, no bio, no blog. No SDKs, no
+      specs, no developer artifacts. Not recorded in apis.yml.
+  - url: https://github.com/spenergynetworks
+    httpStatus: 404
+  - url: https://github.com/sp-energy-networks
+    httpStatus: 404
+  - url: https://smartenergycodecompany.co.uk/sec-parties/
+    httpStatus: 403
+    note: SEC Party register not machine-readable anonymously. DCC status unverifiable.
+  - url: https://www.smartdcc.co.uk/
+    httpStatus: 200
+    note: Smart DCC corporate site. No public machine-readable DCC User list found.
+
+findings:
+  summary: >-
+    ScottishPower is the clean UK control case for the question of whether a data
+    mandate is replicable. Britain never wrote one for the consumer. It wrote an
+    infrastructure mandate — the Smart DCC monopoly under the Smart Energy Code —
+    which produced a national smart-meter communications network that no
+    unaffiliated developer can reach, and it wrote an open-network-data licence
+    condition — Ofgem Data Best Practice under RIIO-ED2 — which produced a real,
+    anonymous, OpenAPI-documented, CC-BY-licensed data API over 150 datasets. Both
+    obligations land on the same parent company, and the results could not be more
+    different. The wires business is open because it was told to be open, and it
+    actually built the thing. The supply business is shut, publishes no developer
+    portal, has four non-resolving developer subdomains and one 403 API host, runs
+    its partner integrations on an internal WSO2 estate nobody outside can see, and
+    returns 403 to any machine that asks it anything — including for its own
+    robots.txt. Nothing compels it to do otherwise, and it doesn't. Meanwhile
+    Britain's actually API-native supplier, Octopus, built a public developer API
+    with no mandate at all and now licenses that platform to other utilities. The
+    UK's evidence is therefore doubly awkward for mandate advocates and for mandate
+    sceptics alike: the mandate that existed (network data) worked and produced a
+    callable API; the mandate that never existed (consumer data) produced nothing
+    at ScottishPower and everything at Octopus. Regulation explains the floor here,
+    not the ceiling.
+  mandateIsNotImplementation: >-
+    Recorded as separate facts throughout, in both directions. For the
+    smart-meter-infrastructure regime: coverage is certain by construction (a
+    licensed GB supplier must be a SEC Party and DCC User) but NO register entry,
+    endpoint, or conformant surface could be called to prove it, so the status is
+    live-claimed-unverified and not live-implemented — the ruthless reading. For
+    the Ofgem Data Best Practice licence condition: the implementation was proved
+    by anonymous HTTP 200s against a catalogue, a swagger document, a legacy search
+    endpoint and a DCAT-AP export, so it is recorded as live-implemented. No
+    compliance page, press release, or vendor case study was treated as evidence of
+    an implementation anywhere in this profile — and in ScottishPower's case none
+    of them could even be read.
+  contrastWithAustralia: >-
+    AGL in Australia is designated, listed on a public machine-readable CDR
+    register, and answers Consumer Data Standards discovery endpoints anonymously —
+    consumer data mandated and live, market data absent. ScottishPower is the exact
+    inverse: consumer data unmandated and absent, network data mandated and live.
+    The statutory machinery Australia transplanted from banking into energy has no
+    British counterpart, and the British instrument that does exist points at the
+    network operator rather than at the customer's record.
+
+sources:
+- url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/swagger.json
+  type: OpenAPI
+  httpStatus: 200
+  note: Harvested to openapi/scottishpower-spen-open-data-explore-api-openapi.json.
+- url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/catalog/datasets
+  type: APIReference
+  httpStatus: 200
+  note: Primary evidence of a live, anonymous, 150-dataset open data implementation.
+- url: https://spenergynetworks.opendatasoft.com/terms/
+  type: Licensing
+  httpStatus: 200
+  note: SP Energy Networks Open Data Licence, based on CC BY 4.0.
+- url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+  type: APIReference
+  httpStatus: 200
+  note: The confirmed developer surface.
+- url: https://help.opendatasoft.com/apis/ods-explore-v2/
+  type: Documentation
+  httpStatus: 200
+  note: Upstream vendor documentation for the Explore v2.1 contract.
+- url: https://help.opendatasoft.com/apis/ods-search-v1/
+  type: Documentation
+  httpStatus: 200
+  note: Upstream vendor documentation for the legacy Search v1.0 API.
+- url: https://www.ofgem.gov.uk/sites/default/files/2021-11/Data_Best_Practice_Guidance_v1.pdf
+  type: Documentation
+  note: >-
+    Ofgem Data Best Practice Guidance — the eleven principles, including presumed
+    open, made a licence condition under RIIO-2 (RIIO-ED2 SLC 9.5).
+- url: https://smartenergycodecompany.co.uk/becoming-a-dcc-user/
+  type: Documentation
+  note: >-
+    Smart Energy Code — a party must join the SEC and complete the User Entry
+    Process to become a DCC User. The infrastructure mandate, not a data right.
+- url: https://wso2.com/customers/scottishpower-exposes-apis-securely-to-increase-customer-service-offerings/
+  type: CaseStudy
+  note: >-
+    Vendor customer story describing ScottishPower's WSO2 API Manager deployment for
+    external partners. Only public account of a ScottishPower API programme. Treated
+    as evidence of a partner-gated internal estate, NOT of a public API.
+- url: https://www.ofgem.gov.uk/decision/approval-letter-spens-data-privacy-plan-access-household-electricity-smart-metering-data
+  type: Documentation
+  note: >-
+    Ofgem approval of SP Energy Networks' data privacy plan for access to household
+    electricity smart metering data — network-side access under the DCC regime, not
+    a consumer-facing API.
+
+actions:
+  apisYmlCreated: true
+  openapiHarvested: 1
+  apisListed: 2
+  fabricationCheck: >-
+    No host, endpoint, scope or specification was invented. Every baseURL in
+    apis.yml returned HTTP 200 anonymously on 2026-07-27 and every documentation URL
+    is either a verified 200 or a canonical ScottishPower / SP Energy Networks human
+    URL explicitly recorded above as 403-unreadable. No consumer API was recorded
+    because none is documented. No LinkedIn or GitHub property was recorded because
+    neither could be verified (LinkedIn 404 to this client; the GitHub account is an
+    empty user with zero repositories). No auth scheme was asserted beyond the
+    apiKey scheme carried in the harvested specification itself.
