@@ -59,68 +59,15 @@ description: >-
   than a consumer data right, and no public register entry or endpoint for that
   obligation could be verified from outside.
 apis:
-- aid: scottishpower:spen-open-data-explore-api
-  name: SP Energy Networks Open Data Explore API
-  description: >-
-    The live, anonymous REST API behind the SP Energy Networks Open Data Portal —
-    ScottishPower's regulated distribution and transmission arm publishing its
-    network data under Ofgem's Data Best Practice "presumed open" licence
-    condition. Implements the Opendatasoft Explore API v2.1 contract (OpenAPI
-    3.0.3, 16 paths) over a catalogue of 150 datasets covering the embedded
-    capacity register, network flow, historic substation demand curves, LV
-    monitoring, smart-meter penetration by transformer, secondary substations,
-    generation heat maps, connections insight and per-dataset data-quality
-    scores. Verified on 2026-07-27 with no API key and no account: GET
-    /catalog/datasets returned HTTP 200 with total_count 150,
-    access-control-allow-origin "*", and x-ratelimit-limit 5000 with
-    x-ratelimit-remaining 4990 resetting daily. Records, facets, attachments and
-    exports (CSV, Parquet, GPX, DCAT-AP RDF/XML) are all served from the same
-    base URL. An optional apikey query parameter, obtainable from a free
-    self-serve portal account, raises quotas; none is required for public
-    datasets. Data is published under the SP Energy Networks Open Data Licence,
-    which the portal states is based on the Creative Commons Attribution 4.0
-    International Public Licence.
-  humanURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
-  baseURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
-  tags:
-  - Open Data
-  - Energy
-  - Electricity
-  - Grid
-  - Distribution Network Operator
-  - Embedded Capacity Register
-  - Smart Metering
-  - Flexibility
-  - United Kingdom
-  properties:
-  - type: OpenAPI
-    url: openapi/scottishpower-spen-open-data-explore-api-openapi.json
-  - type: Overlay
-    url: overlays/scottishpower-spen-open-data-explore-api-overlay.yaml
-  - type: APIReference
-    url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
-  - type: Documentation
-    url: https://help.opendatasoft.com/apis/ods-explore-v2/
-  - type: Documentation
-    url: https://spenergynetworks.opendatasoft.com/pages/support-help-main/
-  - type: GettingStarted
-    url: https://spenergynetworks.opendatasoft.com/explore/
-  - type: Licensing
-    url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
-  - type: TermsOfService
-    url: https://spenergynetworks.opendatasoft.com/terms/
-  - type: Glossary
-    url: https://spenergynetworks.opendatasoft.com/glossary/
 - aid: scottishpower:spen-open-data-search-api-v1
   name: SP Energy Networks Open Data Search API (v1.0)
   description: >-
-    The legacy Opendatasoft Search API v1.0 still served alongside Explore v2.1 on
-    the SP Energy Networks Open Data Portal. Verified anonymously on 2026-07-27:
-    GET /api/datasets/1.0/search/?rows=1 returned HTTP 200 with nhits 150,
-    matching the v2.1 catalogue exactly. Recorded because it is live and callable
-    without credentials, but it is superseded — new integrations should use the
-    Explore v2.1 contract above. No first-party OpenAPI is published for this
-    version by SP Energy Networks; the contract is Opendatasoft's.
+    The legacy Opendatasoft Search API v1.0 still served alongside Explore v2.1 on the SP Energy Networks
+    Open Data Portal. Verified anonymously on 2026-07-27: GET /api/datasets/1.0/search/?rows=1 returned
+    HTTP 200 with nhits 150, matching the v2.1 catalogue exactly. Recorded because it is live and callable
+    without credentials, but it is superseded — new integrations should use the Explore v2.1 contract
+    above. No first-party OpenAPI is published for this version by SP Energy Networks; the contract is
+    Opendatasoft's.
   humanURL: https://help.opendatasoft.com/apis/ods-search-v1/
   baseURL: https://spenergynetworks.opendatasoft.com/api/datasets/1.0
   tags:
@@ -136,7 +83,57 @@ apis:
     url: https://spenergynetworks.opendatasoft.com/api/datasets/1.0/search/
   - type: Licensing
     url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
+- aid: scottishpower:scottishpower-catalog-api
+  name: ScottishPower Catalog API
+  description: API to enumerate datasets
+  humanURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+  baseURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
+  tags:
+  - Catalog
+  properties:
+  - type: OpenAPI
+    url: openapi/scottishpower-catalog-api-openapi.yml
+  - type: APIReference
+    url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+  - type: Documentation
+    url: https://help.opendatasoft.com/apis/ods-explore-v2/
+  - type: Documentation
+    url: https://spenergynetworks.opendatasoft.com/pages/support-help-main/
+  - type: GettingStarted
+    url: https://spenergynetworks.opendatasoft.com/explore/
+  - type: Licensing
+    url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
+  - type: TermsOfService
+    url: https://spenergynetworks.opendatasoft.com/terms/
+  - type: Glossary
+    url: https://spenergynetworks.opendatasoft.com/glossary/
+- aid: scottishpower:scottishpower-dataset-api
+  name: ScottishPower Dataset API
+  description: API to work on records
+  humanURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+  baseURL: https://spenergynetworks.opendatasoft.com/api/explore/v2.1
+  tags:
+  - Dataset
+  properties:
+  - type: OpenAPI
+    url: openapi/scottishpower-dataset-api-openapi.yml
+  - type: APIReference
+    url: https://spenergynetworks.opendatasoft.com/api/explore/v2.1/console
+  - type: Documentation
+    url: https://help.opendatasoft.com/apis/ods-explore-v2/
+  - type: Documentation
+    url: https://spenergynetworks.opendatasoft.com/pages/support-help-main/
+  - type: GettingStarted
+    url: https://spenergynetworks.opendatasoft.com/explore/
+  - type: Licensing
+    url: https://spenergynetworks.opendatasoft.com/p/sp-energy-networks-open-data-licence/
+  - type: TermsOfService
+    url: https://spenergynetworks.opendatasoft.com/terms/
+  - type: Glossary
+    url: https://spenergynetworks.opendatasoft.com/glossary/
 common:
+- type: Overlay
+  url: overlays/scottishpower-spen-open-data-explore-api-overlay.yaml
 - type: VulnerabilityDisclosure
   url: security/scottishpower-vulnerability-disclosure.yml
 - type: Security
