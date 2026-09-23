@@ -1,0 +1,22 @@
+{
+  "provider": "scottishpower",
+  "sources": [
+    "_original/scottishpower-spen-open-data-explore-api-openapi.json"
+  ],
+  "outputs": [
+    "scottishpower-catalog-api-openapi.yml",
+    "scottishpower-dataset-api-openapi.yml"
+  ],
+  "archived": [],
+  "errors": [],
+  "warnings": [],
+  "notes": [
+    "sourced from openapi/_original/ (1 archived document(s)); previously refined output at the top level was skipped rather than re-split",
+    "scottishpower-spen-open-data-explore-api-openapi.json: upgraded openapi 3.0.3 -> OpenAPI 3.2.0",
+    "apis.yml register: already-registered"
+  ],
+  "skipped": [
+    "scottishpower-catalog-api-openapi.yml: previously refined output, superseded by openapi/_original/",
+    "scottishpower-dataset-api-openapi.yml: previously refined output, superseded by openapi/_original/"
+  ]
+}
